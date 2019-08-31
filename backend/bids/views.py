@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from bids.models import Auction
 from django_filters import rest_framework as filters
+from rest_framework import permissions
 
 # Create your views here.
 
@@ -45,3 +46,9 @@ class AuctionList(generics.ListCreateAPIView):
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class AuctionListAuthorized(AuctionDetail):
+    queryset = Auction.objects.get(owner=self.request.user)
