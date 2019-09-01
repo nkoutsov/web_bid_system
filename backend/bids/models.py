@@ -25,7 +25,7 @@ class Bid(models.Model):
 class Auction(models.Model):
     item_id = models.CharField(max_length = 50)
     name = models.CharField(max_length = 50)
-    category = models.ManyToManyField(Category, on_delete=models.PROTECT)
+    category = models.ManyToManyField(Category)
     currently = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     first_bid = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
