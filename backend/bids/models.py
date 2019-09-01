@@ -7,36 +7,36 @@ class User(BasicUser) :
     address = models.CharField(max_length = 50)
     afm = models.IntegerField()
 
-# class Category(models.Model):
-#     name = models.CharField(max_length = 50)
+class Category(models.Model):
+    name = models.CharField(max_length = 50)
 
-# class Bidder(User):
-#     rating = models.DecimalField()
-#     location = models.CharField(max_length = 50)
-#     country = models.CharField(max_length = 50)
+class Bidder(User):
+    rating = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
+    location = models.CharField(max_length = 50)
+    country = models.CharField(max_length = 50)
 
 
-# class Bid(models.Model):
-#     bidder = models.ForeignKey(User)
-#     time = models.DateTimeField()
-#     amount = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
+class Bid(models.Model):
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
+    time = models.DateTimeField()
+    amount = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
 
 
 class Auction(models.Model):
     item_id = models.CharField(max_length = 50)
     name = models.CharField(max_length = 50)
-    # category = models.ManyToManyField(Category)
+    category = models.ManyToManyField(Category)
     category = models.CharField(max_length = 50,default = "all")
     currently = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     first_bid = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     number_of_bids = models.IntegerField(default = 0)
-    # bid = models.OneToManyField(Bid)
+    bid = models.ForeignKey(Bid, on_delete=models.CASCADE)
     location = models.CharField(max_length = 300)
     country = models.CharField(max_length = 50,default = 'Greece')
     started = models.DateTimeField(auto_now_add=True)    
     ends = models.DateTimeField(auto_now_add=True)
-    # seller = models.ForeignKey(User)
+    seller = models.ForeignKey(User, on_delete=models.PROTECT)
     description = models.CharField(max_length = 500,default = 'Empty')
 
 
