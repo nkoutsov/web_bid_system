@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from bids.serializers import UserSerializer, GroupSerializer, AuctionSerializer
+from bids.serializers import UserSerializer, GroupSerializer, AuctionSerializer,BidSerializer,CategorySerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
-from bids.models import Auction
+from bids.models import Auction,Bid,Category
+from bids.models import User as Suser
 from django_filters import rest_framework as filters
 from rest_framework import permissions
+from bids.permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 
@@ -26,8 +28,20 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = Suser.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+
+# class UserList(generics.ListCreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+class BidViewSet(viewsets.ModelViewSet):
+    queryset = Bid.objects.all()
+    serializer_class = BidSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -43,12 +57,17 @@ class AuctionList(generics.ListCreateAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = AuctionFilter
 
+    def perform_create(self, serializer):
+        serializer.save(seller=self.request.user)
+
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                      IsOwnerOrReadOnly]
     
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(seller=self.request.user)
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -62,4 +81,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        return obj.owner == request.user
+        return obj.seller == request.user
