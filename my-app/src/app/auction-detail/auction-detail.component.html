@@ -1,0 +1,13 @@
+<div *ngIf="auction">
+    <h2>{{auction.name | uppercase}} Details</h2>
+    <div><span>id: </span>{{auction.id}}</div>
+    <div>
+      <label>
+            Country: {{auction.country}}
+      </label>
+      <label>
+            Description: {{auction.description}} 
+      </label>
+    </div>
+    <button (click)='goBack()'>Back</button>
+  </div>

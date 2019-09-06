@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     class Meta:
         model = SUser
-        fields = ['url','username','password', 'email','id','afm','phone','address','is_superuser','auctions']
+        fields = ['url','username','password', 'email','id','afm','phone','address','is_superuser','auctions','is_active','is_staff']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

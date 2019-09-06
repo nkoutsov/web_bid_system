@@ -11,6 +11,10 @@ from bids.models import User as Suser
 from django_filters import rest_framework as filters
 from rest_framework import permissions
 from bids.permissions import IsOwnerOrReadOnly
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+
+
 
 # Create your views here.
 
@@ -23,7 +27,8 @@ class AuctionFilter(filters.FilterSet):
         model = Auction
         fields = ['category', 'description', 'max_price']
 
-
+# @ensure_csrf_cookie
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -68,6 +73,14 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user)
+
+class PendingUsersViewSet(viewsets.ModelViewSet):
+    queryset = Suser.objects.filter(is_active=False,is_staff=False)
+    serializer_class = UserSerializer
+
+class ActiveUsersViewSet(viewsets.ModelViewSet):
+    queryset = Suser.objects.filter(is_active=True,is_staff=False)
+    serializer_class = UserSerializer
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """

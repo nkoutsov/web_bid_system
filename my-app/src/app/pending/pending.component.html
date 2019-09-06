@@ -1,0 +1,5 @@
+<div *ngFor='let u of users'>
+    <p>{{u.username}}: {{u.email}}
+    <button (click)="accept(u)">Accept</button>
+    </p>
+</div>

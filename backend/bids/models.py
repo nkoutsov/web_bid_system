@@ -8,6 +8,7 @@ class User(BasicUser) :
     phone = models.IntegerField(null=True)
     address = models.CharField(max_length = 50,null=True)
     afm = models.IntegerField(null=True)
+    is_active = models.BooleanField(default=False)
 
 class Category(models.Model):
     name = models.CharField(max_length = 50)
@@ -36,5 +37,5 @@ class Auction(models.Model):
     country = models.CharField(max_length = 50,default = 'Greece')
     started = models.DateTimeField(auto_now_add=True)    
     ends = models.DateTimeField(auto_now_add=True)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions")
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions") # change models.CASCADE to PROTECT
     description = models.CharField(max_length = 500,default = 'Empty')

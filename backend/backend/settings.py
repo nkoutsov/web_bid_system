@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'bids.apps.BidsConfig',
+    'corsheaders',
     'django_filters',
 ]
 
@@ -51,11 +52,20 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:4200",
+    "http://localhost:4545"
+]
+
+CSRF_COOKIE_NAME = 'XSRF-TOKEN'
+# CSRF_COOKIE_SECURE = False
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -77,7 +87,10 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 WSGI_APPLICATION = 'backend.wsgi.application'
