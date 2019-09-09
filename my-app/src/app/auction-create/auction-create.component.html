@@ -1,0 +1,68 @@
+<form ngForm (ngSubmit)="submitAuction(auctionForm)" >
+
+    <div align="center">
+            <label for="description">Name<br/></label>
+        <input type="text" class="form-control" id="name"
+         
+        [(ngModel)]="model.name" name="name">
+    </div>
+
+    <div align="center">
+            <label for="category">Category<br/></label>
+        <input type="text" class="form-control" id="category"
+         
+        [(ngModel)]="model.category" name="category">
+    </div>
+
+    <div align="center">
+            <label for="buy_price">Buy Price<br/></label>
+        <input type="number" class="form-control" id="buy_price" min="0" value="null"
+        [(ngModel)]="model.buy_price" name="buy_price">
+    </div>
+
+    <div align="center">
+            <label for="first_bid">first Bid<br/></label>
+        <input type="number" class="form-control" id="first_bid" min="0" value="null"
+         
+        [(ngModel)]="model.first_bid" name="first_bid">
+    </div>
+
+    <div align="center">
+            <label for="location">Location<br/></label>
+        <input type="text" class="form-control" id="location"
+         
+        [(ngModel)]="model.location" name="location">
+    </div>
+
+    <div align="center">
+        <label for="country">Country<br/></label>
+        <input type="text" class="form-control" id="country"
+         
+        [(ngModel)]="model.country" name="country">
+    </div>
+
+    <div align="center">
+        <label for="started">Started<br/></label>
+        <input type="text" class="form-control" id="started"
+         
+        [(ngModel)]="model.started" name="started">
+    </div> 
+    
+    <div align="center">
+        <label for="ends">Ends<br/></label>
+        <input type="text" class="form-control" id="ends"
+        required
+        [(ngModel)]="model.ends" name="ends">
+    </div> 
+
+    <div align="center">
+        <label for="description">Description<br/></label>
+        <input type="text" class="form-control" id="description"
+        required
+        [(ngModel)]="model.description" name="description">
+    </div>
+
+    <div align="center">
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Submit</button>
+    </div>
+</form>

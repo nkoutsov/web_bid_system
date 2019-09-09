@@ -3,7 +3,7 @@ export class Auction {
     name: string;
 
     // maybe create another class for category
-    category: string; 
+    category: string[]; 
 
     currently: number;
     buy_price: number;

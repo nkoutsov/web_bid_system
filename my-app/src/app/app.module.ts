@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { UserDataService } from './user-data.service';
 import { ErrorInterceptor} from './helpers/error.interceptor';
 import { JwtInterceptor} from './helpers/jwt.interceptor';
+import { AuctionCreateComponent } from './auction-create/auction-create.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { JwtInterceptor} from './helpers/jwt.interceptor';
     UserDetailComponent,
     AuctionListComponent,
     AuctionDetailComponent,
-    LoginComponent
+    LoginComponent,
+    AuctionCreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,6 +43,7 @@ import { JwtInterceptor} from './helpers/jwt.interceptor';
       { path: 'auction/:id', component: AuctionDetailComponent },
       { path: 'admin', component: AdminComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'john', component: AuctionCreateComponent },
     ])
   ],
   providers: [

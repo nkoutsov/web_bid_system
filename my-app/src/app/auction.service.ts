@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Auction } from './models/auction'
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,10 @@ export class AuctionService {
 
   testToken(): Observable<any> {
     return this.http.post(this.api+'api/token/',{'username' : 'admin', 'password':'root'}, this.httpOptions);
+  }
+
+  postAuction(auction : Auction): Observable<any> {
+    return this.http.post<Auction>(this.api + 'bids/', auction, this.httpOptions);
   }
 
   constructor(private http: HttpClient) { }
