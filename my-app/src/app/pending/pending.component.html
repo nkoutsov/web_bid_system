@@ -1,5 +1,11 @@
-<div *ngFor='let u of users'>
-    <p>{{u.username}}: {{u.email}}
-    <button (click)="accept(u)">Accept</button>
-    </p>
-</div>
+<h2>Pending Users:</h2>
+<ul class="list-group" *ngFor='let u of users'>
+    <li class='list-group-item list-group-item-action'>
+        <p>
+            <a routerLink="/detail/{{u.id}}">
+            {{u.username}} : {{u.email}}
+        </a></p><p>
+        <button type="button" class="btn btn-success" (click)="accept(u)">Accept</button>
+        </p>
+    </li>
+</ul>

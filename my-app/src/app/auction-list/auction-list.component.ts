@@ -23,8 +23,8 @@ export class AuctionListComponent implements OnInit {
   }
 
   getAuctions() {
-    this.auctionService.testToken().subscribe(data=>console.log(data));
     this.auctionService.getAuctions().subscribe(auctions => this.auctions = auctions.results);
+    // this.auctionService.searchAuction("1",null,'good',null).subscribe(auctions => this.auctions = auctions.results);
   }
 
 }

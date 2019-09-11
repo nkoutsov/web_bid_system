@@ -1,14 +1,14 @@
 <h2> Users: </h2>
-<ol>
-<li *ngFor='let u of users'>
-    <!-- <p>
-        {{u.username}}: {{u.email}}
-    </p> -->
+<ol class='list-group'>
+    <li class='list-group-item list-group-item-action' *ngFor='let u of users'>
+        <!-- <p>
+            {{u.username}}: {{u.email}}
+        </p> -->
 
-    <a routerLink="/detail/{{u.id}}">
-        {{u.username}} : {{u.email}}
-    </a>
+        <a routerLink="/detail/{{u.id}}">
+           {{u.username}} 
+        </a>
 
-</li>
+    </li>
 </ol>
 

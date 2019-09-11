@@ -1,0 +1,28 @@
+<div *ngIf="flag=='inbox'">
+    <div *ngFor='let a of inbox'>
+        <!-- {{a.text}} - {{a.receiver}} -->
+        <div class="card" style="width: 28rem;">
+            <div class="card-body">
+                <h5 class="card-title"> {{a.sender}} </h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                <p class="card-text">{{a.text}}</p>
+                <!-- <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a> -->
+            </div>
+        </div>
+    </div>
+
+</div>
+<div *ngIf='flag=="sent"'>
+    <div align='center' *ngFor='let a of sent'>
+            <div class="card" style="width: 28rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{a.text}} </h5>
+                        <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                        <p class="card-text">{{a.receiver}}</p>
+                        <!-- <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a> -->
+                    </div>
+                </div>
+    </div>
+</div>

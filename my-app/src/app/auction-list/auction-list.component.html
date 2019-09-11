@@ -1,16 +1,9 @@
 <h3>Logged in as: {{username}} </h3>
 <ul>
     <li *ngFor='let a of auctions'>
-        <!-- <p>Name: {{a.name}}</p>
-        <p>Id: {{a.id}} </p>
-
-        <p> Country: {{a.country}} </p>
-        <p> Description: {{a.description}} </p> -->
         <a routerLink="/auction/{{a.id}}">
             {{a.name}} 
         </a>
 
     </li>
-
-    <!-- <button (click)='' -->
 </ul>

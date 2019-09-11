@@ -12,16 +12,21 @@ const httpOptions = {
 export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
-    login(username: string, password: string): Observable<string> {
+    login(username: string, password: string): Observable<any> {
         let ln: Login = { "username": username, "password": password };
-        return this.http.post<string>("http://127.0.0.1:8000/api/token/", ln, {responseType: 'text' as 'json'})
+        let token = {"token":""};
+        console.log(ln);
+        return this.http.post<any>("http://localhost:8000/api/token/", ln, {responseType: 'text' as 'json'})
             .pipe(map(token => { 
-                localStorage.setItem('token', token);
+                let a = JSON.parse(token).token;
+                console.log(JSON.parse(token).token)
+                localStorage.setItem('token', "token "+a);
                 localStorage.setItem('username',ln.username);
-                console.log(token);
-                // console.log(token.username)
+                const token_parts = token.split(/\./);
+                // console.log(token_parts)
+                const token_decoded = JSON.parse(window.atob(token_parts[1]));
                 return token;
-            }));
+            }));        
     }
 
     logout() {
