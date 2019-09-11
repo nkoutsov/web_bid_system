@@ -14,6 +14,7 @@ router.register(r'active',views.ActiveUsersViewSet)
 urlpatterns = [
     path('bids/', views.AuctionList.as_view()),
     path('bids/<int:pk>/', views.AuctionDetail.as_view()),
+    path('bids/detail/', views.BidsDetail.as_view()),
     path('', include(router.urls)),
     url('^messages/(?P<action>.+)/$', views.Messages.as_view()),
     path('message/<int:pk>/', views.MessageRUD.as_view()),

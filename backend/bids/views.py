@@ -13,8 +13,9 @@ from rest_framework import permissions
 from bids.permissions import IsOwnerOrReadOnly
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
-
-
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.middleware import get_user
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 # Create your views here.
 from django.http import HttpResponse
@@ -56,20 +57,6 @@ def authenticate_user(request):
         res = {'error': 'please provide a email and a password'}
         return Response(res)
 
-@api_view(['POST'])
-def my_view(request):
-    username = request.data['username']
-    password = request.data['password']
-    print(username,password)
-    print(request.data['username'])
-    user = authenticate(request, username=username, password=password)
-    request.user = user
-    print("user:",user)
-    
-    if user is not None:
-        login(request, user)
-    return HttpResponse(user) #redirect('http://127.0.0.1:8000/api/token/',request=request)
-
 class AuctionFilter(filters.FilterSet):
     # min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
     max_price = filters.NumberFilter(field_name="currently", lookup_expr='lte')
@@ -100,8 +87,15 @@ class UserViewSet(viewsets.ModelViewSet):
 #     serializer_class = UserSerializer
 
 class BidViewSet(viewsets.ModelViewSet):
-    queryset = Bid.objects.all()
+    queryset = Bid.objects.all().order_by('-time')
     serializer_class = BidSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #                   IsOwnerOrReadOnly]
+
+    def perform_create(self,serializer):
+        user = self.request.user
+        serializer.save(bidder=user)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -129,30 +123,35 @@ class AuctionList(generics.ListCreateAPIView):
             user, jwt = jwt_authentication.authenticate(self.request)
         serializer.save(seller=self.request.user)
 
+        
+class BidsDetail(generics.ListCreateAPIView):
+    serializer_class = BidSerializer
+    lookup_field = 'auction'
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        auction_id = self.request.GET.get('a',"")
+        ac = get_object_or_404(Auction, pk=auction_id)
+        return Bid.objects.filter(auction=ac).order_by('-time')
+
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+                    #   IsOwnerO/rReadOnly]
     
     def perform_create(self, serializer):
-        jwt_authentication = JSONWebTokenAuthentication()
-        if jwt_authentication.get_jwt_value(self.request):
-            user, jwt = jwt_authentication.authenticate(self.request)
         serializer.save(seller=self.request.user)
-from django.contrib.auth.middleware import get_user
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+
 class Messages(generics.ListCreateAPIView):
     serializer_class = MessageSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        jwt_authentication = JSONWebTokenAuthentication()
-        if jwt_authentication.get_jwt_value(self.request):
-            user, jwt = jwt_authentication.authenticate(self.request)
-        # user = get_user(self.request) #self.request.user
-        # print(self.request.headers)
+        user = self.request.user
         action = self.kwargs['action']
+
         if action=='inbox' and user.is_authenticated:
             return Message.objects.filter(receiver=user).order_by("-date_sent")
         elif action=='sent' and user.is_authenticated:

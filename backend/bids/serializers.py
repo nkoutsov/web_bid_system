@@ -57,10 +57,10 @@ class BidderSerializer(serializers.ModelSerializer):
             fields = ['id','rating','location','country']
 
 class BidSerializer(serializers.ModelSerializer):
-        auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all())
+        # auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all())
         class Meta:
             model = Bid
-            fields = ['id','bidder','time','amount','auctions']
+            fields = ['id','time','amount','auction']
 
 class AuctionSerializer(serializers.ModelSerializer):
         seller = serializers.ReadOnlyField(source='seller.username')

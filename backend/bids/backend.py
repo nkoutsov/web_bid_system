@@ -76,20 +76,13 @@ class AuthenticationMiddlewareJWT(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        request.user = SimpleLazyObject(lambda: self.__class__.get_jwt_user(request))
+        request.user = self.__class__.get_jwt_user(request) 
         return self.get_response(request)
 
     @staticmethod
     def get_jwt_user(request):
         user = get_user(request)
-        print("user:",user)
-        if user.is_authenticated:
-            return user
         jwt_authentication = JSONWebTokenAuthentication()
-        # print(dir(request))
-        print(request.headers)
         if jwt_authentication.get_jwt_value(request):
             user, jwt = jwt_authentication.authenticate(request)
-        else :
-            print("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD")
         return user

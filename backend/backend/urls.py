@@ -38,7 +38,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('login/', views.my_view),
+    # path('login/', views.my_view),
     path('',include('bids.urls')),
     path('api/token/',  obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),

@@ -19,10 +19,6 @@ class Bidder(User):
     country = models.CharField(max_length = 50)
 
 
-class Bid(models.Model):
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
-    time = models.DateTimeField()
-    amount = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
 
 
 class Auction(models.Model):
@@ -32,13 +28,19 @@ class Auction(models.Model):
     buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     first_bid = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     number_of_bids = models.IntegerField(default = 0)
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE,related_name="auctions",null=True)
+    # bid = models.ForeignKey(Bid, on_delete=models.CASCADE,related_name="auctions",null=True)
     location = models.CharField(max_length = 300)
     country = models.CharField(max_length = 50,default = 'Greece')
     started = models.DateTimeField(auto_now_add=True)    
     ends = models.DateTimeField(auto_now_add=True)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions") # change models.CASCADE to PROTECT
     description = models.CharField(max_length = 500,default = 'Empty')
+
+class Bid(models.Model):
+    bidder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    time = models.DateTimeField()
+    amount = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE,related_name="bids",null=True)
 
 class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="sent")
