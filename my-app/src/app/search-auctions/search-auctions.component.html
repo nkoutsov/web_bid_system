@@ -1,0 +1,23 @@
+<form [formGroup]="myform" (ngSubmit)="onSubmit(myform.value)">
+    <p><label for="category">Category:</label> <select formControlName="category" id="category" multiple>
+  <option value="1">Category object (1)</option>
+
+  <option value="2">Category object (2)</option>
+
+</select></p>
+<p><label for="id_description">Description contains:</label> <input type="text" formControlName="description" id="id_description"></p>
+<p><label for="id_max_price">Currently is less than or equal to:</label> <input type="number" formControlName="max_price" step="any" id="id_max_price"></p>
+<p><label for="id_location">Location:</label> <input type="text" formControlName="location" id="id_location"></p>
+    <button type="submit" class="button">Submit</button>
+</form>
+
+<div *ngIf='active'>
+    <ul>
+        <li *ngFor='let a of auctions'>
+            <a routerLink="/auction/{{a.id}}">
+                {{a.name}} 
+            </a>
+    
+        </li>
+    </ul>
+</div>

@@ -16,7 +16,12 @@ import { FormsModule } from '@angular/forms';
 import { UserDataService } from './user-data.service';
 import { ErrorInterceptor} from './helpers/error.interceptor';
 import { JwtInterceptor} from './helpers/jwt.interceptor';
+import { SearchAuctionsComponent } from './search-auctions/search-auctions.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MessagesComponent } from './messages/messages.component';
 import { AuctionCreateComponent } from './auction-create/auction-create.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -28,12 +33,17 @@ import { AuctionCreateComponent } from './auction-create/auction-create.componen
     AuctionListComponent,
     AuctionDetailComponent,
     LoginComponent,
+    SearchAuctionsComponent,
+    MessagesComponent,
     AuctionCreateComponent,
+    RegistrationComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'list', component: UserListComponent },
@@ -43,7 +53,10 @@ import { AuctionCreateComponent } from './auction-create/auction-create.componen
       { path: 'auction/:id', component: AuctionDetailComponent },
       { path: 'admin', component: AdminComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'john', component: AuctionCreateComponent },
+      { path: 'messages/:act', component: MessagesComponent},
+      { path: 'create', component: AuctionCreateComponent },
+      { path: 'register', component: RegistrationComponent },
+      { path: "filters", component: SearchAuctionsComponent },
     ])
   ],
   providers: [

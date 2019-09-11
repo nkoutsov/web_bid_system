@@ -1,4 +1,4 @@
-<form ngForm (ngSubmit)="submitAuction(auctionForm)" >
+<form ngForm (ngSubmit)="onSubmit()" >
 
     <div align="center">
             <label for="description">Name<br/></label>
@@ -66,3 +66,8 @@
         <button type="submit" class="btn btn-success" (click)="onSubmit()">Submit</button>
     </div>
 </form>
+
+
+<div align="center">
+    <button type="submit" class="btn btn-success" (click)="onSubmit()">Submit</button>
+</div>

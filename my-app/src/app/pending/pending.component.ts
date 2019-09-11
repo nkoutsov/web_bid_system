@@ -33,8 +33,8 @@ export class PendingComponent implements OnInit {
 
   accept(user : User): void {
     user.is_active = true;
-    this.userService.acceptUser(user).subscribe(() => console.log("OK"));
-    this.goBack();
+    this.userService.acceptUser(user).subscribe(() => this.goBack());
+    
   }
 
 }
