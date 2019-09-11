@@ -96,6 +96,15 @@ class BidViewSet(viewsets.ModelViewSet):
         user = self.request.user
         serializer.save(bidder=user)
 
+class AuctionViewSet(viewsets.ListApiView):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #                   IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        return Auction.objects.filter(seller=self.request.user)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
