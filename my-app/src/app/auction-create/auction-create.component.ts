@@ -20,13 +20,14 @@ export class AuctionCreateComponent implements OnInit {
     ngOnInit() {
       this.auction = {
         id: null,
+        active:false,
         name: "john2",//this.model.name,
         category: ["1","2"],//this.model.category,
         currently: 1,//this.model.currently,
         buy_price: 1,//this.model.buy_price,
         first_bid: 1,//this.model.first_bid,
         number_of_bids: 1,//this.model.number_of_bids,
-        location: null,
+        location: "Greece",
         country: "1",//this.model.country,
         started: new Date(),//this.model.started,
         ends: new Date(),//this.model.ends,

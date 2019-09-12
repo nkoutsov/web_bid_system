@@ -1,6 +1,7 @@
 export class Auction {
     id: string;
     name: string;
+    active: boolean;
 
     // maybe create another class for category
     category: string[]; 

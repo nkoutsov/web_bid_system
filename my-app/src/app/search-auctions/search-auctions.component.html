@@ -1,23 +1,59 @@
-<form [formGroup]="myform" (ngSubmit)="onSubmit(myform.value)">
-    <p><label for="category">Category:</label> <select formControlName="category" id="category" multiple>
+<!-- <form class='inline' [formGroup]="myform" (ngSubmit)="onSubmit(myform.value)">
+    <p><label for="category">Category:</label> <select formControlName="category" id="category">
   <option value="1">Category object (1)</option>
 
   <option value="2">Category object (2)</option>
 
 </select></p>
-<p><label for="id_description">Description contains:</label> <input type="text" formControlName="description" id="id_description"></p>
-<p><label for="id_max_price">Currently is less than or equal to:</label> <input type="number" formControlName="max_price" step="any" id="id_max_price"></p>
-<p><label for="id_location">Location:</label> <input type="text" formControlName="location" id="id_location"></p>
+<p><label class="sr-only" for="id_description">Description contains:</label> <input class="form-control mb-2 mr-sm-2" type="text" formControlName="description" id="id_description"></p>
+<p><label class="sr-only" for="id_max_price">Currently is less than or equal to:</label> <input class="form-control mb-2 mr-sm-2" type="number" formControlName="max_price" step="any" id="id_max_price"></p>
+<p><label  class="sr-only" for="id_location">Location:</label> <input type="text" formControlName="location" id="id_location"></p>
     <button type="submit" class="button">Submit</button>
-</form>
+</form> -->
+
+<form class="form-inline" [formGroup]="myform" (ngSubmit)="onSubmit(myform.value)">
+        <label class="sr-only" for="inlineFormInputName2">Description</label>
+        <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" formControlName="description" placeholder="Description">
+      
+        <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>
+        <div class="input-group mb-2 mr-sm-2">
+          <input type="text" class="form-control" id="inlineFormInputGroupUsername2" formControlName="max_price" placeholder="Max price">
+        </div>
+      
+        <div class="form-check mb-2 mr-sm-2">
+          <!-- <input class="form-check-input" type="checkbox" id="inlineFormCheck">
+          <label class="form-check-label" for="inlineFormCheck">
+            Remember me
+          </label> -->
+          <select class="custom-select" formControlName="category" id="category">
+              <option value="">All</option>
+                <option value="1">Category 1</option>
+              
+                <option value="2">Category 2</option>
+              
+              </select>
+        </div>
+        <label class="sr-only" for="inlineFormInputGroupUsername2">Location</label>
+        <div class="input-group mb-2 mr-sm-2">
+          <input type="text" class="form-control" id="inlineFormInputGroupUsername2" formControlName="location" placeholder="Location">
+        </div>
+      
+        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+      </form>
 
 <div *ngIf='active'>
-    <ul>
-        <li *ngFor='let a of auctions'>
-            <a routerLink="/auction/{{a.id}}">
-                {{a.name}} 
-            </a>
-    
-        </li>
-    </ul>
+    <h3> {{results}} Results </h3>
+        <div *ngFor='let a of pageOfItems'>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{a.name}}</h5>
+                        <p class="card-text">{{a.description}} - {{a.currently}}$</p>
+                        <a  routerLink="/auction/{{a.id}}" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer pb-0 pt-3">
+              <jw-pagination [pageSize]='5' [items]="auctions" (changePage)="onChangePage($event)"></jw-pagination>
+          </div>
 </div>

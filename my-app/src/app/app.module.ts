@@ -22,6 +22,8 @@ import { MessagesComponent } from './messages/messages.component';
 import { AuctionCreateComponent } from './auction-create/auction-create.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { MyauctionsComponent } from './myauctions/myauctions.component';
+import { JwPaginationComponent } from 'jw-angular-pagination';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     MessagesComponent,
     AuctionCreateComponent,
     RegistrationComponent,
-    NavbarComponent
+    NavbarComponent,
+    MyauctionsComponent,
+    JwPaginationComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     RouterModule.forRoot([
       { path: 'list', component: UserListComponent },
       { path: 'auctions', component: AuctionListComponent },
+      { path: 'myauctions', component: MyauctionsComponent },
       { path: 'act', component: PendingComponent },
       { path: 'detail/:id', component: UserDetailComponent },
       { path: 'auction/:id', component: AuctionDetailComponent },
