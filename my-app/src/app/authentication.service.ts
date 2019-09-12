@@ -22,9 +22,12 @@ export class AuthenticationService {
                 console.log(JSON.parse(token).token)
                 localStorage.setItem('token', "token "+a);
                 localStorage.setItem('username',ln.username);
+                
                 const token_parts = token.split(/\./);
                 // console.log(token_parts)
                 const token_decoded = JSON.parse(window.atob(token_parts[1]));
+                localStorage.setItem('id',token_decoded.user_id);
+                // console.log(token_decoded.user_id);
                 return token;
             }));        
     }
@@ -32,5 +35,7 @@ export class AuthenticationService {
     logout() {
         // remove token from local storage to log user out
         localStorage.removeItem('token');
+        localStorage.removeItem('is_active');
+        localStorage.removeItem('username');
     }
 }

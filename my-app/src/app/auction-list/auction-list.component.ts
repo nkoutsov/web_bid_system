@@ -9,8 +9,9 @@ import { AuctionService } from '../auction.service';
   styleUrls: ['./auction-list.component.css']
 })
 export class AuctionListComponent implements OnInit {
-  private auctions: Auction[];
+  private auctions: Array<any>; //Auction[];
   private username: string;
+  pageOfItems: any[];
 
   constructor(
     private route: ActivatedRoute,
@@ -21,6 +22,11 @@ export class AuctionListComponent implements OnInit {
     this.getAuctions();
     this.username = localStorage.getItem('username');
   }
+
+  onChangePage(pageOfItems: Array<any>) {
+    // update current page of items
+    this.pageOfItems = pageOfItems;
+ }
 
   getAuctions() {
     this.auctionService.getAuctions().subscribe(auctions => this.auctions = auctions.results);
