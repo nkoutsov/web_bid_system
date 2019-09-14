@@ -108,9 +108,17 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+class AuctionViewSet(viewsets.ModelViewSet):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #                   IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        return Auction.objects.filter(seller=self.request.user)
 
 class AuctionList(generics.ListCreateAPIView):
-    queryset = Auction.objects.all().order_by('-started')
+    queryset = Auction.objects.filter(active=True).order_by('-started')
     serializer_class = AuctionSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = AuctionFilter
@@ -118,21 +126,27 @@ class AuctionList(generics.ListCreateAPIView):
                       IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        jwt_authentication = JSONWebTokenAuthentication()
-        if jwt_authentication.get_jwt_value(self.request):
-            user, jwt = jwt_authentication.authenticate(self.request)
+        # jwt_authentication = JSONWebTokenAuthentication()
+        # if jwt_authentication.get_jwt_value(self.request):
+        #     user, jwt = jwt_authentication.authenticate(self.request)
         serializer.save(seller=self.request.user)
+    
+    def get_queryset(self):
+        won=self.request.GET.get('won',False)
+        if(won):
+            return Auction.objects.filter(winner=self.request.user)
+        return Auction.objects.filter(active=True).order_by('-started')
 
         
 class BidsDetail(generics.ListCreateAPIView):
     serializer_class = BidSerializer
     lookup_field = 'auction'
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] #,IsOwnerOrReadOnly]
 
     def get_queryset(self):
         auction_id = self.request.GET.get('a',"")
         ac = get_object_or_404(Auction, pk=auction_id)
-        return Bid.objects.filter(auction=ac).order_by('-time')
+        return Bid.objects.filter(auction=ac).order_by('-amount')
 
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()

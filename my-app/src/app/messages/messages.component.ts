@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-  private inbox : Message[];
+  private inbox : any[] // Message[];
   private sent : Message[];
   private flag : string;
 
@@ -27,8 +27,25 @@ export class MessagesComponent implements OnInit {
   }
 
   getInboxSent() {
-    this.blservice.getInboxMessages().subscribe(inb => this.inbox=inb.results);
+    this.blservice.getInboxMessages().subscribe(inb => {
+      this.inbox=inb.results;
+      for (var i of this.inbox) {
+        if (i.read == false ) {
+          i.read = true;
+          // update msg
+          this.blservice.updateMsg(i).subscribe(data => console.log(data));
+        }
+      }
+    });
     this.blservice.getSentMessages().subscribe(snt => this.sent = snt.results);
+  }
+
+  send(message,rec) {
+    let msg = {
+      text: message,
+      receiver: rec
+    }
+    this.blservice.sendMessage(msg).subscribe(data => console.log(data));
   }
 
 

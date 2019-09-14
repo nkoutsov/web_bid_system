@@ -20,12 +20,12 @@ class Inbox(serializers.PrimaryKeyRelatedField):
         return []
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = serializers.PrimaryKeyRelatedField(queryset = SUser.objects.all(),source="sender.username")
-    receiver = serializers.PrimaryKeyRelatedField(queryset = SUser.objects.all(),source="receiver.username")
+    sender = serializers.ReadOnlyField(source="sender.username")
+    receiver = serializers.SlugRelatedField(queryset = SUser.objects.all(),slug_field="username")
 
     class Meta:
         model = Message
-        fields = ['id','text','receiver','sender','date_sent']
+        fields = ['id','text','receiver','sender','date_sent','read']
 
 class UserSerializer(serializers.ModelSerializer):
     # auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all(),allow_null=True)
@@ -58,14 +58,16 @@ class BidderSerializer(serializers.ModelSerializer):
 
 class BidSerializer(serializers.ModelSerializer):
         # auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all())
+        bidder = serializers.ReadOnlyField(source="bidder.username")
         class Meta:
             model = Bid
-            fields = ['id','time','amount','auction']
+            fields = ['id','bidder','time','amount','auction']
 
 class AuctionSerializer(serializers.ModelSerializer):
         seller = serializers.ReadOnlyField(source='seller.username')
         bid = serializers.ReadOnlyField(source='bid.amount')
         category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),many=True)
+        winner = serializers.SlugRelatedField(slug_field='username',queryset=SUser.objects.all(),allow_null=True)
         class Meta:
             model = Auction
-            fields = ['id','name','seller','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description']
+            fields = ['id','active','name','seller','winner','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description']

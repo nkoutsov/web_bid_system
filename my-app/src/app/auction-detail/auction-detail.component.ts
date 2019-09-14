@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserDataService } from '../user-data.service';
 import { Location } from '@angular/common';
 import { AuctionService } from '../auction.service';
+import { MessagingService } from '../messaging.service';
 
 @Component({
   selector: 'app-auction-detail',
@@ -17,12 +18,15 @@ export class AuctionDetailComponent implements OnInit {
   ended : boolean;
   username;
   bids;
+  won;
+  messsage;
   // auction_active : boolean;
 
   constructor(
     private route: ActivatedRoute,
     private auctionService: AuctionService,
-    private location: Location
+    private location: Location,
+    private messageService: MessagingService
   ) { }
 
   ngOnInit() {
@@ -35,6 +39,7 @@ export class AuctionDetailComponent implements OnInit {
 
   getAuction() {
     const id = +this.route.snapshot.paramMap.get('id');
+    this.won = this.route.snapshot.queryParamMap.get('won');
     this.auctionService.getAuction(id).subscribe(auction => {
       this.auction = auction;
       this.getBids();
@@ -67,5 +72,17 @@ export class AuctionDetailComponent implements OnInit {
 
   getBids() {
     this.auctionService.getBids(this.auction.id).subscribe(data => this.bids = data.results);
+  }
+
+  send(messsage) {
+    // alert(this.messsage);
+    alert(messsage);
+    let msg = {
+      text:messsage,
+      receiver: this.auction.seller,
+      date_sent: new Date()
+    };
+    this.messageService.sendMessage(msg).subscribe(data => console.log(data));
+    
   }
 }

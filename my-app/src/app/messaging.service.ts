@@ -23,6 +23,14 @@ export class MessagingService {
     return this.http.get<any>(this.api+'messages/sent/');
   }
 
+  sendMessage(msg) : Observable<any> {
+    return this.http.post(this.api+"messages/sent/",JSON.stringify(msg),this.httpOptions);
+  }
+
+  updateMsg(msg) : Observable<any> {
+    return this.http.put(this.api+'message/'+msg.id+'/',JSON.stringify(msg),this.httpOptions);
+  }
+
   // sendMessage(text:string, receiver: User) : Observable<any> {
   //   let message : Message = {"text":text,"receiver":receiver};
   //   return this.http.post<any>(this.api+'messages/new/',message,this.httpOptions);

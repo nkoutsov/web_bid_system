@@ -26,15 +26,22 @@
       <br>
       <button  class="btn btn-primary btn-sm" (click)='place()'>Place bid</button>
 </div>
-<div *ngIf='!auction.active '>
+<div *ngIf='!auction.active && username==auction.seller '>
       <button class="btn btn-primary btn-sm" (click)='start()'>Start Auction</button>
 </div>
 <div *ngIf='username==auction.seller'>
       <h3> Bids:</h3>
       <div *ngFor='let b of bids' class="card">
             <p>Bidder: {{b.bidder}} </p>
-            {{b.amount}} -  {{ b.time | date:'medium'}}
+            {{b.amount}}$ -  {{ b.time | date:'medium'}}
       </div>
+</div>
+
+<div *ngIf='won=="true"'>
+      <form>
+      <input type="text" [(ngModel)]='message' name="message">
+      <button (click)="send(message)" class="btn btn-primary">Send Message</button>
+      </form>
 </div>
 
   </div>

@@ -10,6 +10,7 @@ router.register(r'bidds', views.BidViewSet)
 router.register(r'cats', views.CategoryViewSet)
 router.register(r'inactive',views.PendingUsersViewSet)
 router.register(r'active',views.ActiveUsersViewSet)
+router.register(r'myauctions', views.AuctionViewSet)
 
 urlpatterns = [
     path('bids/', views.AuctionList.as_view()),

@@ -9,6 +9,10 @@
                 <!-- <a href="#" class="card-link">Card link</a>
                 <a href="#" class="card-link">Another link</a> -->
             </div>
+            <form>
+                    <input type="text" [(ngModel)]='message' name="message">
+                    <button (click)="send(message,a.sender)" class="btn btn-primary">Reply</button>
+                    </form>
         </div>
     </div>
 
@@ -23,6 +27,7 @@
                         <!-- <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a> -->
                     </div>
+                    
                 </div>
     </div>
 </div>

@@ -19,9 +19,15 @@ export class AuctionService {
   getAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"bids/");
   }
+
   getMyAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"myauctions/");
   }
+
+  getWonAuctions() : Observable<any> {
+    return this.http.get<any>(this.api+"bids/?won=True");
+  }
+
 
   getAuction(id) : Observable<any> {
     return this.http.get<any>(this.api+"bids/"+id+"/");

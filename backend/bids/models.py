@@ -22,18 +22,19 @@ class Bidder(User):
 
 
 class Auction(models.Model):
+    active = models.BooleanField(default=False)
     name = models.CharField(max_length = 50)
     category = models.ManyToManyField(Category)
     currently = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     first_bid = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     number_of_bids = models.IntegerField(default = 0)
-    # bid = models.ForeignKey(Bid, on_delete=models.CASCADE,related_name="auctions",null=True)
     location = models.CharField(max_length = 300)
     country = models.CharField(max_length = 50,default = 'Greece')
     started = models.DateTimeField(auto_now_add=True)    
     ends = models.DateTimeField(auto_now_add=True)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions") # change models.CASCADE to PROTECT
+    winner = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="won_auctions",null=True)
     description = models.CharField(max_length = 500,default = 'Empty')
 
 class Bid(models.Model):
@@ -47,6 +48,7 @@ class Message(models.Model):
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="inbox")
     text = models.CharField(max_length = 500)
     date_sent = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
 
 # -*- coding: utf-8 -*-
 
