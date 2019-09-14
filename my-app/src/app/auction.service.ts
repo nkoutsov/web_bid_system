@@ -66,9 +66,24 @@ export class AuctionService {
     return this.http.post(this.api + 'bids/', JSON.stringify(auction), this.httpOptions)
                   .pipe(map(data => console.log(data)));
   }
+  
+  putAuction(auction : Auction): Observable<any> {
+    return this.http.put(this.api + 'bids/'+auction.id+'/', JSON.stringify(auction), this.httpOptions)
+               .pipe(map(data => console.log(data)));
+  }
+
+  deleteAuction(id : number): Observable<any> {
+    return this.http.delete(this.api + 'bids/'+id+'/', this.httpOptions)
+    .pipe(map(data => console.log(data)));
+  }
 
   updateAuction(auction : Auction) : Observable<any> {
     return this.http.put(this.api+'bids/'+auction.id+'/',JSON.stringify(auction),this.httpOptions);
+  }
+  
+  getBidsOfAuction(auctionID : number): Observable<any> {
+    return this.http.get(this.api + 'bids/detail/?a=' + auctionID, this.httpOptions)
+    .pipe(map(data => console.log(data)));
   }
 
   constructor(private http: HttpClient) { }

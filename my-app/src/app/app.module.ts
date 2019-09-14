@@ -27,6 +27,8 @@ import { JwPaginationComponent } from 'jw-angular-pagination';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminguardService } from './guards/adminguard.service';
 import { WonAuctionsComponent } from './won-auctions/won-auctions.component';
+import { AuctionExportComponent } from './auction-export/auction-export.component';
+import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-delete.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { WonAuctionsComponent } from './won-auctions/won-auctions.component';
     NavbarComponent,
     MyauctionsComponent,
     JwPaginationComponent,
-    WonAuctionsComponent
+    WonAuctionsComponent,
+    AuctionEditDeleteComponent,
+    AuctionExportComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +68,8 @@ import { WonAuctionsComponent } from './won-auctions/won-auctions.component';
       { path: 'login', component: LoginComponent },
       { path: 'messages/:act', component: MessagesComponent, canActivate: [AuthGuard]},
       { path: 'create', component: AuctionCreateComponent },
+      { path: 'edit/:id', component: AuctionEditDeleteComponent },
+      { path: 'export/:id', component: AuctionExportComponent },
       { path: 'register', component: RegistrationComponent },
       { path: "filters", component: SearchAuctionsComponent },
       { path: "won", component: WonAuctionsComponent }

@@ -9,6 +9,8 @@ class User(BasicUser) :
     address = models.CharField(max_length = 50,null=True)
     afm = models.IntegerField(null=True)
     is_active = models.BooleanField(default=False)
+	location = models.CharField(max_length = 50,null=True)
+	country = models.CharField(max_length = 50,null=True)
 
 class Category(models.Model):
     name = models.CharField(max_length = 50)
