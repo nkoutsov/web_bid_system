@@ -14,7 +14,8 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getUnreadMsg();
+    if( localStorage.getItem('token'))
+      this.getUnreadMsg();
   }
 
   getUnreadMsg() {

@@ -12,7 +12,7 @@ export class AuctionEditDeleteComponent implements OnInit {
   model: any = {};
 
   map: any;
-  auction : Auction;
+  auction : any;
   returnUrl: string;
 
   constructor(private auctionService : AuctionService,
@@ -21,11 +21,14 @@ export class AuctionEditDeleteComponent implements OnInit {
   ngOnInit() {
     // first get auction and its bids
     const id = +this.route.snapshot.paramMap.get('id');
-    this.auctionService.getAuction(id).subscribe(auction => this.auction = auction);
-    this.auctionService.getAuction(id).subscribe(auction => this.auction = auction);
+    this.auctionService.getAuction(id).subscribe(auction => this.model = auction);
+
+    console.log(this.model.ends)
+    this.model.ends = new Date(this.model.ends)
+    console.log(this.model.ends)
 
     // assign model
-    this.model.id = id
+    /*this.model.id = id
     this.model.active = this.auction.active
     this.model.name = this.auction.name
     this.model.category = this.auction.category
@@ -38,25 +41,25 @@ export class AuctionEditDeleteComponent implements OnInit {
     this.model.started = this.auction.started
     this.model.ends = this.auction.ends
     this.model.description = this.auction.description
-    this.model.seller = this.auction.seller
+    this.model.winner = this.auction.winner*/
   }
 
   updateAuction() {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-    let auction : Auction = {
+    let auction : any = {
       id: this.model.id,
       active: this.model.active,
       name: this.model.name,
       category: this.model.category,
-      currently: this.model.currently,
+      //currently: this.model.currently,
       buy_price: this.model.buy_price,
       first_bid: this.model.first_bid,
-      number_of_bids: this.model.number_of_bids,
+      //number_of_bids: this.model.number_of_bids,
       location: this.model.location,
       country: this.model.country,
       started: this.model.started,
       ends: this.model.ends,
       description: this.model.description,
-      seller: this.model.seller
+      winner: this.model.winner
     };
     
     this.auctionService.putAuction(auction).subscribe(data => console.log(data));

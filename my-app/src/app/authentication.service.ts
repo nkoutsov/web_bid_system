@@ -37,5 +37,6 @@ export class AuthenticationService {
         localStorage.removeItem('token');
         localStorage.removeItem('is_active');
         localStorage.removeItem('username');
+        localStorage.removeItem('admin');
     }
 }

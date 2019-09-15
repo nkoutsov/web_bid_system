@@ -64,7 +64,7 @@ import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-d
       { path: 'act', component: PendingComponent, canActivate: [AuthGuard] },
       { path: 'detail/:id', component: UserDetailComponent, canActivate: [AuthGuard] },
       { path: 'auction/:id', component: AuctionDetailComponent },
-      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard,AdminguardService] },
       { path: 'login', component: LoginComponent },
       { path: 'messages/:act', component: MessagesComponent, canActivate: [AuthGuard]},
       { path: 'create', component: AuctionCreateComponent },
@@ -72,7 +72,8 @@ import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-d
       { path: 'export/:id', component: AuctionExportComponent },
       { path: 'register', component: RegistrationComponent },
       { path: "filters", component: SearchAuctionsComponent },
-      { path: "won", component: WonAuctionsComponent }
+      { path: "won", component: WonAuctionsComponent },
+      { path: "export", component: AuctionExportComponent }
     ])
   ],
   providers: [

@@ -35,7 +35,7 @@ export class AuctionListComponent implements OnInit {
       let bids;
       for (var a of this.auctions) {
         a.ends = new Date(a.ends);
-        if (a.ends < now) {
+        if (a.ends < now && this.username) {
           a.active = false;
 
           // get all bids of current auction

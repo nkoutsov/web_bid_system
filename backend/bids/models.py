@@ -9,16 +9,16 @@ class User(BasicUser) :
     address = models.CharField(max_length = 50,null=True)
     afm = models.IntegerField(null=True)
     is_active = models.BooleanField(default=False)
-	location = models.CharField(max_length = 50,null=True)
-	country = models.CharField(max_length = 50,null=True)
+    location = models.CharField(max_length = 50,null=True)
+    country = models.CharField(max_length = 50,null=True)
 
 class Category(models.Model):
     name = models.CharField(max_length = 50)
 
 class Bidder(User):
     rating = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
-    location = models.CharField(max_length = 50)
-    country = models.CharField(max_length = 50)
+    #location = models.CharField(max_length = 50)
+    #country = models.CharField(max_length = 50)
 
 
 
