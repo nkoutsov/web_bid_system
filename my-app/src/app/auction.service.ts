@@ -19,9 +19,15 @@ export class AuctionService {
   getAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"bids/");
   }
+
   getMyAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"myauctions/");
   }
+
+  getWonAuctions() : Observable<any> {
+    return this.http.get<any>(this.api+"bids/?won=True");
+  }
+
 
   getAuction(id) : Observable<any> {
     return this.http.get<any>(this.api+"bids/"+id+"/");
@@ -73,6 +79,11 @@ export class AuctionService {
 
   updateAuction(auction : Auction) : Observable<any> {
     return this.http.put(this.api+'bids/'+auction.id+'/',JSON.stringify(auction),this.httpOptions);
+  }
+  
+  getBidsOfAuction(auctionID : number): Observable<any> {
+    return this.http.get(this.api + 'bids/detail/?a=' + auctionID, this.httpOptions)
+    .pipe(map(data => console.log(data)));
   }
 
   constructor(private http: HttpClient) { }

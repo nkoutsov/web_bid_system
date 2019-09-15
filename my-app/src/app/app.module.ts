@@ -24,6 +24,11 @@ import { RegistrationComponent } from './registration/registration.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MyauctionsComponent } from './myauctions/myauctions.component';
 import { JwPaginationComponent } from 'jw-angular-pagination';
+import { AuthGuard } from './guards/auth.guard';
+import { AdminguardService } from './guards/adminguard.service';
+import { WonAuctionsComponent } from './won-auctions/won-auctions.component';
+import { AuctionExportComponent } from './auction-export/auction-export.component';
+import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-delete.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +46,10 @@ import { JwPaginationComponent } from 'jw-angular-pagination';
     RegistrationComponent,
     NavbarComponent,
     MyauctionsComponent,
-    JwPaginationComponent
+    JwPaginationComponent,
+    WonAuctionsComponent,
+    AuctionEditDeleteComponent,
+    AuctionExportComponent
   ],
   imports: [
     BrowserModule,
@@ -50,21 +58,26 @@ import { JwPaginationComponent } from 'jw-angular-pagination';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: 'list', component: UserListComponent },
+      { path: 'list', component: UserListComponent, canActivate: [AuthGuard,AdminguardService] },
       { path: 'auctions', component: AuctionListComponent },
-      { path: 'myauctions', component: MyauctionsComponent },
-      { path: 'act', component: PendingComponent },
-      { path: 'detail/:id', component: UserDetailComponent },
+      { path: 'myauctions', component: MyauctionsComponent, canActivate: [AuthGuard] },
+      { path: 'act', component: PendingComponent, canActivate: [AuthGuard] },
+      { path: 'detail/:id', component: UserDetailComponent, canActivate: [AuthGuard] },
       { path: 'auction/:id', component: AuctionDetailComponent },
-      { path: 'admin', component: AdminComponent },
+      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
       { path: 'login', component: LoginComponent },
-      { path: 'messages/:act', component: MessagesComponent},
+      { path: 'messages/:act', component: MessagesComponent, canActivate: [AuthGuard]},
       { path: 'create', component: AuctionCreateComponent },
+      { path: 'edit/:id', component: AuctionEditDeleteComponent },
+      { path: 'export/:id', component: AuctionExportComponent },
       { path: 'register', component: RegistrationComponent },
       { path: "filters", component: SearchAuctionsComponent },
+      { path: "won", component: WonAuctionsComponent }
     ])
   ],
   providers: [
+    AdminguardService,
+    AuthGuard,
     UserDataService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

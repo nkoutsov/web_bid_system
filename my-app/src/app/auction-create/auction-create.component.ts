@@ -31,17 +31,13 @@ export class AuctionCreateComponent implements OnInit {
         country: "1",//this.model.country,
         started: new Date(),//this.model.started,
         ends: new Date(),//this.model.ends,
-        description: "kakakaka"//this.model.description
+        description: "kakakaka",//this.model.description
+        winner:null
       };
     }
   
     onSubmit() {
-      //alert("oti na nai " + this.model)
-      // let auctionService : AuctionService;
-      // alert("oti na nai ")
-      
-      // alert("oti na nai " + auction.category)
-  
+      // let auctionService : AuctionService;      
       // this.model.description = this.model.ends;
       console.log(this.auction);
   

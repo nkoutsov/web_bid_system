@@ -6,4 +6,6 @@ export class User {
     afm: number;
     phone: number;
     address: string;
+    location: string;
+    country: string;
 }
