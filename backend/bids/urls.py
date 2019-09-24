@@ -7,10 +7,12 @@ from django.conf.urls import url
 
 router = routers.DefaultRouter()
 router.register(r'bidds', views.BidViewSet)
-router.register(r'myauctions', views.AuctionViewSet)
 router.register(r'cats', views.CategoryViewSet)
 router.register(r'inactive',views.PendingUsersViewSet)
 router.register(r'active',views.ActiveUsersViewSet)
+router.register(r'myauctions', views.AuctionViewSet)
+router.register(r'export', views.AdminAuctionViewSet)
+router.register(r'reco', views.RecommendationViewSet)
 
 urlpatterns = [
     path('bids/', views.AuctionList.as_view()),

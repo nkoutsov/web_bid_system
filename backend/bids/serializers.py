@@ -20,12 +20,12 @@ class Inbox(serializers.PrimaryKeyRelatedField):
         return []
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = serializers.PrimaryKeyRelatedField(queryset = SUser.objects.all(),source="sender.username")
-    receiver = serializers.PrimaryKeyRelatedField(queryset = SUser.objects.all(),source="receiver.username")
+    sender = serializers.ReadOnlyField(source="sender.username")
+    receiver = serializers.SlugRelatedField(queryset = SUser.objects.all(),slug_field="username")
 
     class Meta:
         model = Message
-        fields = ['id','text','receiver','sender','date_sent']
+        fields = ['id','text','receiver','sender','date_sent','read']
 
 class UserSerializer(serializers.ModelSerializer):
     # auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all(),allow_null=True)
@@ -34,11 +34,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(validated_data['username'], validated_data['email'],
-             validated_data['password'],afm=validated_data['afm'],phone=validated_data['phone'],address=validated_data['address'])
+             validated_data['password'],afm=validated_data['afm'],phone=validated_data['phone'],address=validated_data['address'],location=validated_data['location'],country=validated_data['country'])
         return user
     class Meta:
         model = SUser
-        fields = ['url','username','password', 'email','id','afm','phone','address','is_superuser','is_active','is_staff']
+        fields = ['url','username','password', 'email','id','afm','phone','address','is_superuser','is_active','is_staff','location','country']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -58,14 +58,27 @@ class BidderSerializer(serializers.ModelSerializer):
 
 class BidSerializer(serializers.ModelSerializer):
         # auctions = serializers.PrimaryKeyRelatedField(many=True, queryset=Auction.objects.all())
+        bidder = serializers.ReadOnlyField(source="bidder.username")
+        bidderId = serializers.ReadOnlyField(source="bidder.id")
+        bidderCountry = serializers.ReadOnlyField(source="bidder.country")
+        bidderLocation = serializers.ReadOnlyField(source="bidder.location")
         class Meta:
             model = Bid
-            fields = ['id','time','amount','auction']
+            fields = ['id','bidder','time','amount','auction','bidderId','bidderCountry','bidderLocation']
 
 class AuctionSerializer(serializers.ModelSerializer):
         seller = serializers.ReadOnlyField(source='seller.username')
+        sellerId = serializers.ReadOnlyField(source='seller.id')
         bid = serializers.ReadOnlyField(source='bid.amount')
         category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),many=True)
+        winner = serializers.SlugRelatedField(slug_field='username',queryset=SUser.objects.all(),allow_null=True)
         class Meta:
             model = Auction
-            fields = ['id','name','seller','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description']
+            fields = ['id','active','name','seller','winner','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description','sellerId']
+
+class RecommendationSerializer(serializers.ModelSerializer):
+    auction = serializers.PrimaryKeyRelatedField(queryset=Auction.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=SUser.objects.all())
+    class Meta:
+        model = Recommendation
+        fields = ['id', 'auction', 'user', 'score']

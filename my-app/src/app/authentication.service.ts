@@ -27,7 +27,7 @@ export class AuthenticationService {
                 // console.log(token_parts)
                 const token_decoded = JSON.parse(window.atob(token_parts[1]));
                 localStorage.setItem('id',token_decoded.user_id);
-                // console.log(token_decoded.user_id);
+                console.log(token_decoded);
                 return token;
             }));        
     }
@@ -37,5 +37,6 @@ export class AuthenticationService {
         localStorage.removeItem('token');
         localStorage.removeItem('is_active');
         localStorage.removeItem('username');
+        localStorage.removeItem('admin');
     }
 }

@@ -19,9 +19,15 @@ export class AuctionService {
   getAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"bids/");
   }
+
   getMyAuctions() : Observable<any> {
     return this.http.get<any>(this.api+"myauctions/");
   }
+
+  getWonAuctions() : Observable<any> {
+    return this.http.get<any>(this.api+"bids/?won=True");
+  }
+
 
   getAuction(id) : Observable<any> {
     return this.http.get<any>(this.api+"bids/"+id+"/");
@@ -56,12 +62,13 @@ export class AuctionService {
     return this.http.get<any>(url);    
   }
 
-  postAuction(auction : Auction): Observable<any> {
+  postAuction(auction : any): Observable<any> {
     return this.http.post(this.api + 'bids/', JSON.stringify(auction), this.httpOptions)
                   .pipe(map(data => console.log(data)));
   }
   
   putAuction(auction : Auction): Observable<any> {
+    console.log("aaa " + JSON.stringify(auction))
     return this.http.put(this.api + 'bids/'+auction.id+'/', JSON.stringify(auction), this.httpOptions)
                .pipe(map(data => console.log(data)));
   }
@@ -74,6 +81,24 @@ export class AuctionService {
   updateAuction(auction : Auction) : Observable<any> {
     return this.http.put(this.api+'bids/'+auction.id+'/',JSON.stringify(auction),this.httpOptions);
   }
+  
+  getBidsOfAuction(auctionID : number): Observable<any> {
+    return this.http.get(this.api + 'bids/detail/?a=' + auctionID, this.httpOptions);
+  }
+
+  getAuctionsForExport() : Observable<any> {
+    return this.http.get(this.api + 'export/', this.httpOptions);
+  }
+
+  getCategories() : Observable<any> {
+    return this.http.get(this.api + 'cats/', this.httpOptions);
+  }
+
+  // RECOMMENDATION USE
+  getRecommended() : Observable<any> {
+    return this.http.get(this.api + 'reco/', this.httpOptions);
+  }
+  //
 
   constructor(private http: HttpClient) { }
 }

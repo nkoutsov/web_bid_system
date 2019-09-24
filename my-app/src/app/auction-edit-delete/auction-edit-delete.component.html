@@ -1,6 +1,6 @@
 <div align="center">
     <h1>
-        Auction Creation Form
+        Auction Edit-Delete Form
     </h1>
     
     <form ngNativeValidate (ngSubmit)="updateAuction()">
@@ -15,10 +15,11 @@
 
         <div>
             <label for="category">Category<br/></label>
-            <select multiple type="text" class="form-control" id="category" required
-                    [(ngModel)]="model.category" name="category">
-                <option value="1">category1</option>
-                <option value="2">category2</option>
+            <select multiple class="form-control" id="category" required
+                    [(ngModel)]="model.category.name" name="category">
+                <option *ngFor="let cat of model.category" value={{cat.id}}>
+                    {{cat.name}}
+                </option>
             </select>
         </div>
         <br/>
@@ -31,7 +32,7 @@
         <br/>
 
         <div>
-            <label for="first_bid">first Bid<br/></label>
+            <label for="first_bid">First Bid<br/></label>
             <input type="number" class="form-control" id="first_bid" min="0"
             required
             [(ngModel)]="model.first_bid" name="first_bid">
@@ -57,7 +58,7 @@
         <div>
             <label for="started">Started<br/></label>
             <input type="date" class="form-control" id="started"
-            required
+            
             [(ngModel)]="model.started" name="started">
         </div> 
         <br/>

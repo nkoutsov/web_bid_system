@@ -17,4 +17,5 @@ export class Auction {
     started: Date;
     ends: Date;
     description: string;
+    winner: string;
 }

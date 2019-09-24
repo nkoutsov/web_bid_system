@@ -23,7 +23,8 @@ export class RegistrationComponent implements OnInit {
       email: '',
       phone: '',
       location: '',
-      afm: ''
+      afm: '',
+      country:''
     });
    }
 
@@ -44,7 +45,9 @@ export class RegistrationComponent implements OnInit {
       is_staff : false,
       sent : [],
       auctions : [],
-      inbox : []
+      inbox : [],
+      location : data.location,
+      country : data.country
     };
     console.log(user);
 

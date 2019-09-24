@@ -43,13 +43,12 @@ export class LoginComponent implements OnInit {
     getUser(id) {
         this.userService.getUser(id).subscribe(user => {
             localStorage.setItem("is_active",user.is_active);
-            alert(localStorage.getItem("is_active"));
+            localStorage.setItem("admin",user.is_staff);
         });
     }
 
 
     logout() {
-        this.authenticationService.logout() //.subscribe(data =>console.log(data));
-        // alert("OK");
+        this.authenticationService.logout()
     }
 }

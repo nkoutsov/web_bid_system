@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from bids.serializers import UserSerializer, GroupSerializer, AuctionSerializer,BidSerializer,CategorySerializer,MessageSerializer
+from bids.serializers import UserSerializer, GroupSerializer, AuctionSerializer,BidSerializer,CategorySerializer,MessageSerializer,RecommendationSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
-from bids.models import Auction,Bid,Category,Message
+from bids.models import Auction,Bid,Category,Message,Recommendation
 from bids.models import User as Suser
 from django_filters import rest_framework as filters
 from rest_framework import permissions
@@ -16,6 +16,10 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.middleware import get_user
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+# bonus
+from sklearn.neighbors import KDTree
+import numpy as np
 
 # Create your views here.
 from django.http import HttpResponse
@@ -95,16 +99,17 @@ class BidViewSet(viewsets.ModelViewSet):
     def perform_create(self,serializer):
         user = self.request.user
         serializer.save(bidder=user)
-
-class AuctionViewSet(viewsets.ModelViewSet):
-    queryset = Auction.objects.all()
-    serializer_class = AuctionSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    #                   IsOwnerOrReadOnly]
-
-    def get_queryset(self):
-        return Auction.objects.filter(seller=self.request.user)
-
+        #bonus
+        auction_id = serializer.data.get('auction')
+        #auction_id = self.request.GET.get('a',"")
+        try:
+            #print(str(Recommendation.objects.filter(auction=Auction.objects)[0]))
+            obj = Recommendation.objects.get(user=self.request.user,auction=Auction.objects.get(id=auction_id))
+            obj.score += 5
+            obj.save()
+        except Recommendation.DoesNotExist:
+            obj = Recommendation.objects.create(auction=Auction.objects.get(id=auction_id),user=self.request.user,score=5)
+        #######
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -117,9 +122,18 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    
+class AuctionViewSet(viewsets.ModelViewSet):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    #                   IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        return Auction.objects.filter(seller=self.request.user)
 
 class AuctionList(generics.ListCreateAPIView):
-    queryset = Auction.objects.all().order_by('-started')
+    queryset = Auction.objects.filter(active=True).order_by('-started')
     serializer_class = AuctionSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = AuctionFilter
@@ -127,21 +141,27 @@ class AuctionList(generics.ListCreateAPIView):
                       IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        jwt_authentication = JSONWebTokenAuthentication()
-        if jwt_authentication.get_jwt_value(self.request):
-            user, jwt = jwt_authentication.authenticate(self.request)
+        # jwt_authentication = JSONWebTokenAuthentication()
+        # if jwt_authentication.get_jwt_value(self.request):
+        #     user, jwt = jwt_authentication.authenticate(self.request)
         serializer.save(seller=self.request.user)
+    
+    def get_queryset(self):
+        won=self.request.GET.get('won',False)
+        if(won):
+            return Auction.objects.filter(winner=self.request.user)
+        return Auction.objects.filter(active=True).order_by('-started')
 
         
 class BidsDetail(generics.ListCreateAPIView):
     serializer_class = BidSerializer
     lookup_field = 'auction'
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] #,IsOwnerOrReadOnly]
 
     def get_queryset(self):
         auction_id = self.request.GET.get('a',"")
         ac = get_object_or_404(Auction, pk=auction_id)
-        return Bid.objects.filter(auction=ac).order_by('-time')
+        return Bid.objects.filter(auction=ac).order_by('-amount')
 
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()
@@ -152,6 +172,74 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user)
 
+    def get(self,request,pk,format=None):
+        #bonus
+        auction_id = pk
+        #auction_id = self.request.GET.get('a',"")
+        try:
+            #print(str(Recommendation.objects.filter(auction=Auction.objects)[0]))
+            obj = Recommendation.objects.get(user=self.request.user,auction=Auction.objects.get(id=auction_id))
+            obj.score += 1
+            obj.save()
+        except Recommendation.DoesNotExist:
+            obj = Recommendation.objects.create(auction=Auction.objects.get(id=auction_id),user=self.request.user,score=1)
+        #######
+        return super().get(self, request)
+
+# used for export
+class AdminAuctionViewSet(viewsets.ModelViewSet):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# used for bonus
+class RecommendationViewSet(viewsets.ModelViewSet):
+    queryset = Auction.objects.all()
+    serializer_class = RecommendationSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def recommend(self):
+        # load user ids
+        users = []
+        for x in Suser.objects.all().values_list('id'):
+            users.append(x[0])
+        users = sorted(users)
+        print(users)
+
+        # load auction ids
+        auctions = []
+        for x in Auction.objects.all().values_list('id'):
+            auctions.append(x[0])
+        auctions = sorted(auctions)
+        print(auctions)
+
+        # load scores for each user X auction [userXauction]
+        userId_to_scoreArray = {}
+        for usr in users:
+            scoreArray = []
+            for auction in auctions:
+                score = 0
+                try:
+                    score = float(Recommendation.objects.get(user=Suser.objects.get(id=usr),\
+                            auction=Auction.objects.get(id=auction)).score)
+                except Recommendation.DoesNotExist:
+                    pass
+            
+                scoreArray.append(score)
+                userId_to_scoreArray[usr] = scoreArray
+        print(userId_to_scoreArray)
+
+        X = np.array([x for x in userId_to_scoreArray.values()])
+        kdt = KDTree(X, leaf_size=30, metric='euclidean')
+        print("aaa")
+        print(kdt.query(X, k=2, return_distance=False)) 
+        print(X)
+
+        return userId_to_scoreArray
+
+    def get_queryset(self):
+        return self.recommend()
+        #return Recommendation.objects.filter(user=self.request.user)
 
 class Messages(generics.ListCreateAPIView):
     serializer_class = MessageSerializer

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OsmViewComponent } from './osm-view.component';
+import { WonAuctionsComponent } from './won-auctions.component';
 
-describe('OsmViewComponent', () => {
-  let component: OsmViewComponent;
-  let fixture: ComponentFixture<OsmViewComponent>;
+describe('WonAuctionsComponent', () => {
+  let component: WonAuctionsComponent;
+  let fixture: ComponentFixture<WonAuctionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OsmViewComponent ]
+      declarations: [ WonAuctionsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OsmViewComponent);
+    fixture = TestBed.createComponent(WonAuctionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
