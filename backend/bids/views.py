@@ -16,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.middleware import get_user
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.parsers import FormParser,MultiPartParser
 
 # bonus
 from sklearn.neighbors import KDTree
@@ -60,6 +61,43 @@ def authenticate_user(request):
     except KeyError:
         res = {'error': 'please provide a email and a password'}
         return Response(res)
+
+from django.http import HttpResponse
+
+@api_view(['GET'])
+def exportView(request):
+    auctions = Auction.objects.all()
+    xml = "<Items>\n"
+    for a in auctions:
+        xml += '\t<Item ItemID=\"' + str(a.id) + '\">\n\t\t'
+        xml += '<Name> ' + a.name + " </Name>\n\t\t"
+        for c in a.category.all():
+            xml += "<Category> " + c.name + " </Category>\n\t\t"
+        
+        xml += "<Currently> " + str(a.currently) + " </Currently>\n\t\t"
+        xml += "<First_Bid> " + str(a.first_bid) + " </First_Bid>\n\t\t"
+        xml += "<Number_of_Bids> " + str(a.bids.all().count()) + " </Number_of_Bids>\n\t\t"
+        xml += "<Bids>"
+
+        for b in a.bids.all():
+            xml += "\n\t\t\t <Bid> \n\t\t\t\t "
+            xml += "<Bidder UserID=\"" + b.bidder.username + "\">\n\t\t\t\t\t"
+            # xml += "<Location> " + b.bidder.location + " </Location>\n\t\t\t\t\t"
+            # xml += "<Country> " + b.bidder.country + " </Country>\n\t\t\t\t</Bidder>\n\t\t\t\t"
+            xml += "</Bidder>\n\t\t\t\t"
+            xml += "<Time> " + str(b.time) + " </Time>\n\t\t\t\t"
+            xml += "<Amount> " + str(b.amount) + " </Amount>\n\t\t\t</Bid>"
+        
+        xml += "\n\t\t</Bids>\n\t\t"
+        xml += "<Location> " + a.location + " </Location>\n\t\t"
+        xml += "<Country> " + a.country + " </Country>\n\t\t"
+        xml += "<Started> " + str(a.started) + " </Started>\n\t\t"
+        xml += "<Ends> "  + str(a.ends) + " </Ends>\n\t\t"
+        xml += "<Seller UserID=\"" + a.seller.username + "\">\n\t\t"
+        xml += "<Description> " + a.description + " </Description>\n\t"
+        xml += "</Item>\n"
+    xml += "</Items>"
+    return HttpResponse(xml)
 
 class AuctionFilter(filters.FilterSet):
     # min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
@@ -137,6 +175,7 @@ class AuctionList(generics.ListCreateAPIView):
     serializer_class = AuctionSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = AuctionFilter
+    parser_class = (FormParser,MultiPartParser,)
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwnerOrReadOnly]
 

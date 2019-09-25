@@ -74,7 +74,7 @@ class AuctionSerializer(serializers.ModelSerializer):
         winner = serializers.SlugRelatedField(slug_field='username',queryset=SUser.objects.all(),allow_null=True)
         class Meta:
             model = Auction
-            fields = ['id','active','name','seller','winner','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description','sellerId']
+            fields = ['id','active','photo','name','seller','winner','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description','sellerId']
 
 class RecommendationSerializer(serializers.ModelSerializer):
     auction = serializers.PrimaryKeyRelatedField(queryset=Auction.objects.all())

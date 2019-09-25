@@ -63,7 +63,7 @@ export class AuctionService {
   }
 
   postAuction(auction : any): Observable<any> {
-    return this.http.post(this.api + 'bids/', JSON.stringify(auction), this.httpOptions)
+    return this.http.post(this.api + 'bids/', auction)
                   .pipe(map(data => console.log(data)));
   }
   

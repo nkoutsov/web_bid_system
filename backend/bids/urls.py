@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include(router.urls)),
     url('^messages/(?P<action>.+)/$', views.Messages.as_view()),
     path('message/<int:pk>/', views.MessageRUD.as_view()),
+    path('export/',views.exportView)
 ]

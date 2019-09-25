@@ -21,6 +21,7 @@ class Bidder(User):
     #country = models.CharField(max_length = 50)
 
 class Auction(models.Model):
+    photo = models.ImageField(blank=True,null=True)
     active = models.BooleanField(default=False)
     name = models.CharField(max_length = 50)
     category = models.ManyToManyField(Category)
