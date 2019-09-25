@@ -16,10 +16,11 @@
 
         <div>
             <label for="category">Category<br/></label>
-            <select multiple type="text" class="form-control" id="category" required
-                    [(ngModel)]="model.category" name="category">
-                <option value="1">category1</option>
-                <option value="2">category2</option>
+            <select multiple class="form-control" id="category" required
+                    [(ngModel)]="model.category.name" name="category">
+                <option *ngFor="let cat of model.category" value={{cat.id}}>
+                    {{cat.name}}
+                </option>
             </select>
         </div>
         <br/>

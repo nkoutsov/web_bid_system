@@ -29,6 +29,7 @@ import { AdminguardService } from './guards/adminguard.service';
 import { WonAuctionsComponent } from './won-auctions/won-auctions.component';
 import { AuctionExportComponent } from './auction-export/auction-export.component';
 import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-delete.component';
+import { RecommendationComponent } from './recommendation/recommendation.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-d
     JwPaginationComponent,
     WonAuctionsComponent,
     AuctionEditDeleteComponent,
-    AuctionExportComponent
+    AuctionExportComponent,
+    RecommendationComponent
   ],
   imports: [
     BrowserModule,
@@ -67,13 +69,14 @@ import { AuctionEditDeleteComponent } from './auction-edit-delete/auction-edit-d
       { path: 'admin', component: AdminComponent, canActivate: [AuthGuard,AdminguardService] },
       { path: 'login', component: LoginComponent },
       { path: 'messages/:act', component: MessagesComponent, canActivate: [AuthGuard]},
-      { path: 'create', component: AuctionCreateComponent },
-      { path: 'edit/:id', component: AuctionEditDeleteComponent },
+      { path: 'create', component: AuctionCreateComponent, canActivate: [AuthGuard] },
+      { path: 'edit/:id', component: AuctionEditDeleteComponent, canActivate: [AuthGuard] },
       { path: 'export/:id', component: AuctionExportComponent },
       { path: 'register', component: RegistrationComponent },
       { path: "filters", component: SearchAuctionsComponent },
       { path: "won", component: WonAuctionsComponent },
-      { path: "export", component: AuctionExportComponent }
+      { path: "export", component: AuctionExportComponent, canActivate: [AdminguardService] },
+      { path: "reco", component: RecommendationComponent }
     ])
   ],
   providers: [
