@@ -15,10 +15,10 @@ export class AuctionCreateComponent implements OnInit {
   
     constructor(
       private auctionService : AuctionService
-    ) {  }
+    ) { console.log("Aa"); }
   
     ngOnInit() {
-      this.auctionService.getCategories().subscribe(data => {this.model.category = data.results; console.log(this.model);});
+      
     }
   
     onSubmit() {
@@ -27,7 +27,7 @@ export class AuctionCreateComponent implements OnInit {
       this.auction = {
         active:false,
         name: this.model.name,
-        category: this.model.category.map(c => c.id),
+        category: this.model.category,
         buy_price: this.model.buy_price,
         first_bid: this.model.first_bid,
         number_of_bids: this.model.number_of_bids,

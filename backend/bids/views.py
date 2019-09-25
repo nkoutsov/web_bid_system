@@ -195,7 +195,7 @@ class AdminAuctionViewSet(viewsets.ModelViewSet):
 # used for bonus
 class RecommendationViewSet(viewsets.ModelViewSet):
     queryset = Auction.objects.all()
-    serializer_class = RecommendationSerializer
+    serializer_class = AuctionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def recommend(self):
@@ -204,14 +204,14 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         for x in Suser.objects.all().values_list('id'):
             users.append(x[0])
         users = sorted(users)
-        print(users)
+        #print(users)
 
         # load auction ids
         auctions = []
         for x in Auction.objects.all().values_list('id'):
             auctions.append(x[0])
         auctions = sorted(auctions)
-        print(auctions)
+        #print(auctions)
 
         # load scores for each user X auction [userXauction]
         userId_to_scoreArray = {}
@@ -227,15 +227,45 @@ class RecommendationViewSet(viewsets.ModelViewSet):
             
                 scoreArray.append(score)
                 userId_to_scoreArray[usr] = scoreArray
-        print(userId_to_scoreArray)
+        #print(userId_to_scoreArray)
 
-        X = np.array([x for x in userId_to_scoreArray.values()])
+        scoresArray = list(userId_to_scoreArray.values())
+        X = np.array([x for x in scoresArray])
         kdt = KDTree(X, leaf_size=30, metric='euclidean')
-        print("aaa")
-        print(kdt.query(X, k=2, return_distance=False)) 
-        print(X)
+        top2 = kdt.query(X, k=3, return_distance=False)
+        
+        # get user's 
+        for x in top2:
+            if x[0] == self.request.user.id:
+                top = x
+        #print(X)
+        #print(top)
 
-        return userId_to_scoreArray
+        finalAuctionsScore = []
+        for x in range(len(auctions)):
+            finalAuctionsScore.append(0)
+        #print(finalAuctionsScore)
+
+        for id in top:
+            #print(id)
+            score = scoresArray[id]
+            #print('score = ' + str(score))
+            for index in range(len(score)):
+                finalAuctionsScore[index] += score[index]
+
+        #print(finalAuctionsScore)
+
+        # sort lists together based on scores (finalAuctionsScore and auctions)
+        sortedAuctions = [x for _,x in sorted(zip(finalAuctionsScore, auctions), reverse=True)]
+
+        # take off non active auctions
+        for id in sortedAuctions:
+            if Auction.objects.get(id=id).active == False:
+                sortedAuctions.remove(id)
+
+        #print(sortedAuctions)
+
+        return [Auction.objects.get(id=x) for x in sortedAuctions]
 
     def get_queryset(self):
         return self.recommend()

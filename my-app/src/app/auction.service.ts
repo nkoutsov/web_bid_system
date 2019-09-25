@@ -68,7 +68,6 @@ export class AuctionService {
   }
   
   putAuction(auction : Auction): Observable<any> {
-    console.log("aaa " + JSON.stringify(auction))
     return this.http.put(this.api + 'bids/'+auction.id+'/', JSON.stringify(auction), this.httpOptions)
                .pipe(map(data => console.log(data)));
   }
@@ -85,20 +84,6 @@ export class AuctionService {
   getBidsOfAuction(auctionID : number): Observable<any> {
     return this.http.get(this.api + 'bids/detail/?a=' + auctionID, this.httpOptions);
   }
-
-  getAuctionsForExport() : Observable<any> {
-    return this.http.get(this.api + 'export/', this.httpOptions);
-  }
-
-  getCategories() : Observable<any> {
-    return this.http.get(this.api + 'cats/', this.httpOptions);
-  }
-
-  // RECOMMENDATION USE
-  getRecommended() : Observable<any> {
-    return this.http.get(this.api + 'reco/', this.httpOptions);
-  }
-  //
 
   constructor(private http: HttpClient) { }
 }
