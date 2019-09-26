@@ -3,6 +3,9 @@ from django.contrib.auth.models import AbstractUser as BasicUser
 from django.dispatch import receiver
 from django.db.models.signals import post_save  
 from django.conf import settings
+from django.utils import timezone
+
+now = timezone.now
 
 class User(BasicUser) :
     phone = models.IntegerField(null=True)
@@ -31,8 +34,8 @@ class Auction(models.Model):
     number_of_bids = models.IntegerField(default = 0)
     location = models.CharField(max_length = 300)
     country = models.CharField(max_length = 50,default = 'Greece')
-    started = models.DateTimeField(auto_now_add=True)    
-    ends = models.DateTimeField(auto_now_add=True)
+    started = models.DateTimeField(default=now)    
+    ends = models.DateTimeField(default=now)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions") # change models.CASCADE to PROTECT
     winner = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="won_auctions",null=True)
     description = models.CharField(max_length = 500,default = 'Empty')

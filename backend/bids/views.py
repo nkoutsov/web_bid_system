@@ -64,6 +64,14 @@ def authenticate_user(request):
 
 from django.http import HttpResponse
 
+@api_view(['POST'])
+def validateUsername(request):
+    username = request.data['username']
+    if Suser.objects.filter(username=username).count() > 0:
+        return HttpResponse(False)
+    return HttpResponse(True)
+
+
 @api_view(['GET'])
 def exportView(request):
     auctions = Auction.objects.all()
@@ -186,6 +194,17 @@ class AuctionList(generics.ListCreateAPIView):
         serializer.save(seller=self.request.user)
     
     def get_queryset(self):
+        # Check if an active auction ended
+        for a in Auction.objects.filter(active=True):
+            if datetime.now() > a.ends.replace(tzinfo=None):
+                a.active = False
+                bids = a.bids.all().order_by("-amount")
+                winner = None
+                if bids.count()>0:
+                    winner = bids[0].bidder
+                a.winner = winner
+                a.save()
+
         won=self.request.GET.get('won',False)
         if(won):
             return Auction.objects.filter(winner=self.request.user)
