@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.middleware import get_user
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.parsers import FormParser,MultiPartParser
+from datetime import *
 
 # bonus
 from sklearn.neighbors import KDTree
@@ -262,11 +263,11 @@ class RecommendationViewSet(viewsets.ModelViewSet):
         for x in Suser.objects.all().values_list('id'):
             users.append(x[0])
         users = sorted(users)
-        #print(users)
+        print(users)
 
         # load auction ids
         auctions = []
-        for x in Auction.objects.all().values_list('id'):
+        for x in Auction.objects.filter(active=True).values_list('id'):
             auctions.append(x[0])
         auctions = sorted(auctions)
         #print(auctions)
@@ -287,14 +288,23 @@ class RecommendationViewSet(viewsets.ModelViewSet):
                 userId_to_scoreArray[usr] = scoreArray
         #print(userId_to_scoreArray)
 
-        scoresArray = list(userId_to_scoreArray.values())
+        scoresArray = []
+        for usrid in users:
+            scoresArray.append(userId_to_scoreArray.get(usrid))
+        
+        print(scoresArray)
         X = np.array([x for x in scoresArray])
         kdt = KDTree(X, leaf_size=30, metric='euclidean')
-        top2 = kdt.query(X, k=3, return_distance=False)
+        top2 = kdt.query(X, k=len(users)-1, return_distance=False)
         
-        # get user's 
+        # get user's
+        
+        print(top2)
+        print(self.request.user.id)
+        top = top2[0]
         for x in top2:
-            if x[0] == self.request.user.id:
+            print(x[0])
+            if users[x[0]] == self.request.user.id:
                 top = x
         #print(X)
         #print(top)
@@ -315,11 +325,6 @@ class RecommendationViewSet(viewsets.ModelViewSet):
 
         # sort lists together based on scores (finalAuctionsScore and auctions)
         sortedAuctions = [x for _,x in sorted(zip(finalAuctionsScore, auctions), reverse=True)]
-
-        # take off non active auctions
-        for id in sortedAuctions:
-            if Auction.objects.get(id=id).active == False:
-                sortedAuctions.remove(id)
 
         #print(sortedAuctions)
 
