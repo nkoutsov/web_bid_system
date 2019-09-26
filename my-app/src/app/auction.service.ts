@@ -90,6 +90,10 @@ export class AuctionService {
     return this.http.get(this.api + 'export/', this.httpOptions);
   }
 
+  getExportFile() : Observable<any> {
+    return this.http.get(this.api + 'export/', {responseType: 'text'});
+  }
+
   getCategories() : Observable<any> {
     return this.http.get(this.api + 'cats/', this.httpOptions);
   }
