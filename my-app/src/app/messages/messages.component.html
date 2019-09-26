@@ -9,25 +9,34 @@
                 <!-- <a href="#" class="card-link">Card link</a>
                 <a href="#" class="card-link">Another link</a> -->
             </div>
-            <form>
-                    <input type="text" [(ngModel)]='message' name="message">
-                    <button (click)="send(message,a.sender)" class="btn btn-primary">Reply</button>
-                    </form>
+            <div>
+            <button style="width: 90px;" (click)="reply(a.sender)" class="btn btn-primary">Reply</button>
+            <button style="width: 90px;" (click)="deleteMessage(a.id)" class="btn btn-primary">Delete</button>
+            </div>
+            
         </div>
+    </div>
+
+    <div *ngIf='receiver'>
+        <form>
+            <input type="text" [(ngModel)]='message' name="message">
+            <button (click)="send(message)" class="btn btn-secondary">Reply</button>
+        </form>
     </div>
 
 </div>
 <div *ngIf='flag=="sent"'>
     <div align='center' *ngFor='let a of sent'>
-            <div class="card" style="width: 28rem;">
-                    <div class="card-body">
-                        <h5 class="card-title"> {{a.text}} </h5>
-                        <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
-                        <p class="card-text">{{a.receiver}}</p>
-                        <!-- <a href="#" class="card-link">Card link</a>
+        <div class="card" style="width: 28rem;">
+            <div class="card-body">
+                <h5 class="card-title"> {{a.text}} </h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                <p class="card-text">{{a.receiver}}</p>
+                <!-- <a href="#" class="card-link">Card link</a>
                         <a href="#" class="card-link">Another link</a> -->
-                    </div>
-                    
-                </div>
+            </div>
+            <button  (click)="deleteMessage(a.id)" class="btn btn-primary">Delete</button>
+
+        </div>
     </div>
 </div>

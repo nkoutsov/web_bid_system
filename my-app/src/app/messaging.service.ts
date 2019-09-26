@@ -31,6 +31,10 @@ export class MessagingService {
     return this.http.put(this.api+'message/'+msg.id+'/',JSON.stringify(msg),this.httpOptions);
   }
 
+  deleteMessage(id) : Observable<any> {
+    return this.http.delete(this.api+"message/"+id +"/");
+  }
+
   // sendMessage(text:string, receiver: User) : Observable<any> {
   //   let message : Message = {"text":text,"receiver":receiver};
   //   return this.http.post<any>(this.api+'messages/new/',message,this.httpOptions);

@@ -11,8 +11,9 @@ import { switchMap } from 'rxjs/operators';
 })
 export class MessagesComponent implements OnInit {
   private inbox : any[] // Message[];
-  private sent : Message[];
+  private sent : any[] // Message[];
   private flag : string;
+  private receiver : string;
 
 
   constructor(
@@ -40,12 +41,21 @@ export class MessagesComponent implements OnInit {
     this.blservice.getSentMessages().subscribe(snt => this.sent = snt.results);
   }
 
-  send(message,rec) {
+  send(message) {
     let msg = {
       text: message,
-      receiver: rec
+      receiver: this.receiver
     }
     this.blservice.sendMessage(msg).subscribe(data => console.log(data));
+    this.receiver = null;
+  }
+
+  reply(rec) {
+    this.receiver = rec; 
+  }
+
+  deleteMessage(id) {
+    this.blservice.deleteMessage(id).subscribe(res => console.log(res));
   }
 
 

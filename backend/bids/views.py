@@ -346,7 +346,7 @@ class Messages(generics.ListCreateAPIView):
     def perform_create(self,serializer):
         serializer.save(sender=self.request.user)
 
-class MessageRUD(generics.RetrieveUpdateAPIView):
+class MessageRUD(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
     queryset = Message.objects.all()
     permission_classes = [permissions.IsAuthenticated]
