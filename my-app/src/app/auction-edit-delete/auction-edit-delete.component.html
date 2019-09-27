@@ -17,7 +17,7 @@
             <label for="category">Category<br/></label>
             <select multiple class="form-control" id="category" required
                     [(ngModel)]="model.category.name" name="category">
-                <option *ngFor="let cat of model.category" value={{cat.id}}>
+                <option *ngFor="let cat of model.category" value={{cat.name}}>
                     {{cat.name}}
                 </option>
             </select>
@@ -55,17 +55,17 @@
         </div>
         <br/>
 
-        <div>
+        <!-- <div>
             <label for="started">Started<br/></label>
-            <input type="date" class="form-control" id="started"
+            <input type="datetime-local" class="form-control" id="started"
             
             [(ngModel)]="model.started" name="started">
         </div> 
-        <br/>
+        <br/> -->
 
         <div>
             <label for="ends">Ends<br/></label>
-            <input type="date" class="form-control" id="ends"
+            <input type="datetime-local" class="form-control" id="ends"
             required
             [(ngModel)]="model.ends" name="ends">
         </div>

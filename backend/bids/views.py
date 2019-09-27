@@ -75,7 +75,7 @@ def validateUsername(request):
 
 @api_view(['GET'])
 def exportView(request):
-    auctions = Auction.objects.all()
+    auctions = Auction.objects.all()[0:200]
     xml = "<Items>\n"
     for a in auctions:
         xml += '\t<Item ItemID=\"' + str(a.id) + '\">\n\t\t'
@@ -91,9 +91,9 @@ def exportView(request):
         for b in a.bids.all():
             xml += "\n\t\t\t <Bid> \n\t\t\t\t "
             xml += "<Bidder UserID=\"" + b.bidder.username + "\">\n\t\t\t\t\t"
-            # xml += "<Location> " + b.bidder.location + " </Location>\n\t\t\t\t\t"
-            # xml += "<Country> " + b.bidder.country + " </Country>\n\t\t\t\t</Bidder>\n\t\t\t\t"
-            xml += "</Bidder>\n\t\t\t\t"
+            xml += "<Location> " + b.bidder.location + " </Location>\n\t\t\t\t\t"
+            xml += "<Country> " + b.bidder.country + " </Country>\n\t\t\t\t</Bidder>\n\t\t\t\t"
+            # xml += "</Bidder>\n\t\t\t\t"
             xml += "<Time> " + str(b.time) + " </Time>\n\t\t\t\t"
             xml += "<Amount> " + str(b.amount) + " </Amount>\n\t\t\t</Bid>"
         
@@ -148,6 +148,21 @@ class BidViewSet(viewsets.ModelViewSet):
         serializer.save(bidder=user)
         #bonus
         auction_id = serializer.data.get('auction')
+        a = Auction.objects.get(pk=auction_id)
+        amount = float(serializer.data.get('amount'))
+
+        if a.buy_price != None and float(a.buy_price)>0 and amount>=float(a.buy_price):
+            a.active = False
+            a.winner = user
+            a.save()
+            if a.winner != None:
+                m = Message(sender=a.seller,receiver=a.winner,text="Congratulations, you have just won auction: "+a.name)
+                m.save()
+
+
+        if a.currently < amount:
+            a.currently = amount
+            a.save()
         #auction_id = self.request.GET.get('a',"")
         try:
             #print(str(Recommendation.objects.filter(auction=Auction.objects)[0]))
@@ -156,6 +171,7 @@ class BidViewSet(viewsets.ModelViewSet):
             obj.save()
         except Recommendation.DoesNotExist:
             obj = Recommendation.objects.create(auction=Auction.objects.get(id=auction_id),user=self.request.user,score=5)
+        # serializer.save()
         #######
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -179,6 +195,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Auction.objects.filter(seller=self.request.user)
 
+
 class AuctionList(generics.ListCreateAPIView):
     queryset = Auction.objects.filter(active=True).order_by('-started')
     serializer_class = AuctionSerializer
@@ -192,7 +209,8 @@ class AuctionList(generics.ListCreateAPIView):
         # jwt_authentication = JSONWebTokenAuthentication()
         # if jwt_authentication.get_jwt_value(self.request):
         #     user, jwt = jwt_authentication.authenticate(self.request)
-        serializer.save(seller=self.request.user)
+        first_bid = float(serializer.validated_data.get('first_bid'))
+        serializer.save(seller=self.request.user,currently=first_bid)
     
     def get_queryset(self):
         # Check if an active auction ended
@@ -205,8 +223,14 @@ class AuctionList(generics.ListCreateAPIView):
                     winner = bids[0].bidder
                 a.winner = winner
                 a.save()
+                if a.winner != None:
+                    m = Message(sender=a.seller,receiver=a.winner,text="Congratulations, you have just won auction: "+a.name)
+                    m.save()
 
         won=self.request.GET.get('won',False)
+        notStarted = self.request.GET.get('nstarted',False)
+        if(notStarted):
+            return Auction.objects.filter(is_started=False,seller=self.request.user)
         if(won):
             return Auction.objects.filter(winner=self.request.user)
         return Auction.objects.filter(active=True).order_by('-started')

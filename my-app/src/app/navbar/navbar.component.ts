@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessagingService } from '../messaging.service';
+import { AuthenticationService } from '../authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,15 +10,29 @@ import { MessagingService } from '../messaging.service';
 })
 export class NavbarComponent implements OnInit {
   unread : number;
+  loggedin : boolean;
+  admin: boolean;
 
   constructor(
-    private msgService: MessagingService
+    private msgService: MessagingService,
+    private authenticationService: AuthenticationService,
+    private router : Router
   ) { }
 
   ngOnInit() {
-    if( localStorage.getItem('token'))
+    if( localStorage.getItem('token')){
       this.getUnreadMsg();
+      this.loggedin = true;
+    }
+
+    if (localStorage.getItem('admin'))
+      this.admin=true;
   }
+
+  logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['/auctions']);
+}
 
   getUnreadMsg() {
     this.msgService.getInboxMessages().subscribe(data => {

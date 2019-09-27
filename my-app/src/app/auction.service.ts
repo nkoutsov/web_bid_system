@@ -63,11 +63,11 @@ export class AuctionService {
   }
 
   postAuction(auction : any): Observable<any> {
-    return this.http.post(this.api + 'bids/', auction)
-                  .pipe(map(data => console.log(data)));
+    return this.http.post(this.api + 'bids/', auction);
+                  //.pipe(map(data => console.log(data)));
   }
   
-  putAuction(auction : Auction): Observable<any> {
+  putAuction(auction : any): Observable<any> {
     console.log("aaa " + JSON.stringify(auction))
     return this.http.put(this.api + 'bids/'+auction.id+'/', JSON.stringify(auction), this.httpOptions)
                .pipe(map(data => console.log(data)));
@@ -96,6 +96,10 @@ export class AuctionService {
 
   getCategories() : Observable<any> {
     return this.http.get(this.api + 'cats/', this.httpOptions);
+  }
+
+  getNotStarted(): Observable<any> {
+    return this.http.get(this.api+'bids/?nstarted=True');
   }
 
   // RECOMMENDATION USE

@@ -70,11 +70,12 @@ class AuctionSerializer(serializers.ModelSerializer):
         seller = serializers.ReadOnlyField(source='seller.username')
         sellerId = serializers.ReadOnlyField(source='seller.id')
         bid = serializers.ReadOnlyField(source='bid.amount')
-        category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),many=True)
-        winner = serializers.SlugRelatedField(slug_field='username',queryset=SUser.objects.all(),allow_null=True)
+        # category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(),many=True)
+        category = serializers.SlugRelatedField(slug_field='name',queryset=Category.objects.all(),many=True)
+        # winner = serializers.SlugRelatedField(slug_field='username',queryset=SUser.objects.all(),allow_null=True)
         class Meta:
             model = Auction
-            fields = ['id','active','photo','name','seller','winner','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description','sellerId']
+            fields = ['id','active','photo','name','seller','is_started','category','currently','buy_price','first_bid','number_of_bids','bid','location','country','started','ends','description','sellerId']
 
 class RecommendationSerializer(serializers.ModelSerializer):
     auction = serializers.PrimaryKeyRelatedField(queryset=Auction.objects.all())

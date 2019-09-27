@@ -8,7 +8,9 @@ import { AuctionService } from '../auction.service';
   styleUrls: ['./myauctions.component.css']
 })
 export class MyauctionsComponent implements OnInit {
-  auctions;
+  private auctions;
+  private notStarted;
+  pageOfItems: any[];
 
   constructor(
     private route: ActivatedRoute,
@@ -16,11 +18,32 @@ export class MyauctionsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getNotStarted();
     this.getAuctions();
+  }
+
+  getNotStarted() {
+    this.auctionService.getNotStarted().subscribe(data => {console.log(data.results);this.notStarted=data.results;});
   }
 
   getAuctions() {
     this.auctionService.getMyAuctions().subscribe(auctions => this.auctions = auctions.results);
   }
+
+  onChangePage(pageOfItems: Array<any>) {
+    // update current page of items
+    this.pageOfItems = pageOfItems;
+ }
+
+ activate(a) {
+   a.is_started = true;
+   this.auctionService.putAuction({is_started:true,id:a.id,category:a.category,location:a.location,name:a.name,active:true}).subscribe(()=>this.getNotStarted());
+ }
+
+ editable(a) : boolean {
+   if (a.is_started==false)
+    return true;
+
+ }
 
 }

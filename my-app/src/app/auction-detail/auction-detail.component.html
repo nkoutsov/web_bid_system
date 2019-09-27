@@ -13,15 +13,24 @@
 
     <div class="card">
             <div class="card-body">
+                  <img src="{{auction.photo}}"/>
                 <h5 class="card-title">Name: {{auction.name}}</h5>
-                <p class="card-text">Description: {{auction.description}} - {{auction.currently}}$</p>
+                <p class="card-text">Currently: {{auction.currently}}$</p>
                 <p class="card-text">Category: {{auction.category}}</p>
-                <p class="card-text"> Ends: {{auction.ends}} </p>
+                <p class="card-text"> Ends: {{auction.ends  | date:'fullDate'}} </p>
+                <p class="card-text">Location: {{auction.location}}</p>
+                <p class="card-text">Country: {{auction.country}}</p>
+                <p class="card-text">Seller: {{auction.seller}}  </p>
+                <p class="card-text">Description: {{auction.description}} </p>
+
+                
+                
                 <!-- <a  routerLink="/auction/{{auction.id}}" class="btn btn-primary">Details</a> -->
                 <button  class="btn btn-primary" (click)='goBack()'>Back</button>
             </div>
       </div>
 <div *ngIf='active && auction.active'>
+      <h3 *ngIf="fail" style="color: red"> Bid has to be greater than currently</h3>
       <input [(ngModel)]="amount" placeholder="amount"/>
       <br>
       <button  class="btn btn-primary btn-sm" (click)='place()'>Place bid</button>

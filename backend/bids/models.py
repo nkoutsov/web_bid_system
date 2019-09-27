@@ -29,15 +29,16 @@ class Auction(models.Model):
     name = models.CharField(max_length = 50)
     category = models.ManyToManyField(Category)
     currently = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
-    buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
+    buy_price = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10,blank=True,null=True)
     first_bid = models.DecimalField(default = 0,decimal_places = 2,max_digits = 10)
     number_of_bids = models.IntegerField(default = 0)
     location = models.CharField(max_length = 300)
     country = models.CharField(max_length = 50,default = 'Greece')
-    started = models.DateTimeField(default=now)    
+    started = models.DateTimeField(default=now,null=True,blank=True)
+    is_started = models.BooleanField(default=False)    
     ends = models.DateTimeField(default=now)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name="auctions") # change models.CASCADE to PROTECT
-    winner = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="won_auctions",null=True)
+    winner = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="won_auctions",null=True,blank=True)
     description = models.CharField(max_length = 500,default = 'Empty')
 
 class Bid(models.Model):

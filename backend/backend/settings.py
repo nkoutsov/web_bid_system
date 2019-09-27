@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     # 'rest_framework.authtoken',
-    # 'mod_wsgi.server',
+    'mod_wsgi.server',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +101,7 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 1000,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework.authentication.TokenAuthentication',
         # 'bids.backend.JWTAuthentication',
@@ -157,7 +157,7 @@ JWT_AUTH = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'auctiondb',                      # Or path to database file if using sqlite3.
+        'NAME': 'rec',                      # Or path to database file if using sqlite3.
         'USER': 'postgres',                      # Not used with sqlite3.
         'PASSWORD': 'app',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -202,9 +202,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static2/'
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/bids'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL =  '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL =  '/media2/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media2")
 

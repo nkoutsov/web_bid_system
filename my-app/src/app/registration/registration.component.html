@@ -5,6 +5,7 @@
         Username
     </label>
     <div class="col-sm-10">
+        <div *ngIf='!valid'> <h5 style="color: red" >Username already exists.</h5></div>
         <input name="username" class="form-control" formControlName='username' type="text" value="">
         <span class="help-block">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
     </div>

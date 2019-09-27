@@ -10,6 +10,7 @@ import { User } from '../models/user';
 })
 export class RegistrationComponent implements OnInit {
   myform;
+  private valid;
 
   constructor(
     private userService : UserDataService,
@@ -29,6 +30,7 @@ export class RegistrationComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.valid = true;
   }
 
   onSubmit(data) {
@@ -50,8 +52,15 @@ export class RegistrationComponent implements OnInit {
       country : data.country
     };
     console.log(user);
+    this.userService.validateUsername(user.username).subscribe(data => {
+      if (data == 'True'){
+        this.userService.createUser(user).subscribe();
+        this.valid = true;
+      }
+      else this.valid = false;
+    })
 
-    this.userService.createUser(user).subscribe();
+    
 
   }
 

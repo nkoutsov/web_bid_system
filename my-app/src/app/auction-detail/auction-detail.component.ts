@@ -16,10 +16,12 @@ export class AuctionDetailComponent implements OnInit {
   amount : number;
   active : boolean;
   ended : boolean;
+  fail:boolean;
   username;
   bids;
   won;
   messsage;
+  categories;
   // auction_active : boolean;
 
   constructor(
@@ -42,6 +44,7 @@ export class AuctionDetailComponent implements OnInit {
     this.won = this.route.snapshot.queryParamMap.get('won');
     this.auctionService.getAuction(id).subscribe(auction => {
       this.auction = auction;
+      console.log(this.auction);
       this.getBids();
       let now = new Date();
       this.auction.ends = new Date(this.auction.ends) ;
@@ -56,13 +59,18 @@ export class AuctionDetailComponent implements OnInit {
 
   place() {
     let bid : any = {
-      amount : this.amount,
+      amount : +this.amount,
       time : new Date(),
       auction : this.auction.id
     };
     let c = confirm("Are you sure you want to place the bid? This action cannot be reverted!");
-    if (c)
+    if (c && bid.amount > this.auction.currently){
+      console.log(this.auction.currently);
       this.auctionService.placeBid(bid).subscribe(data => console.log(data));
+      this.fail = false;
+    }
+    else
+      this.fail = true;
   }
 
   start() {

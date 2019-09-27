@@ -38,6 +38,10 @@ export class UserDataService {
   createUser(user): Observable<any> {
     return this.http.post(this.api+'users/',user,this.httpOptions);
   }
+
+  validateUsername(username) : Observable<any> {
+    return this.http.post(this.api+"validate_username/",{username:username},{responseType: 'text'});
+  }
   
   constructor(
     private http: HttpClient

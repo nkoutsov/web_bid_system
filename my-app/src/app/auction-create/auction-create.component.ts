@@ -8,7 +8,8 @@ import { Auction } from '../models/auction';
   styleUrls: ['./auction-create.component.css']
 })
 export class AuctionCreateComponent implements OnInit {
-    model: any = {};
+	model: any = {};
+	cat: any[] //number[];
   
     map: any;
     auction : any;
@@ -28,18 +29,22 @@ export class AuctionCreateComponent implements OnInit {
     }
   
     onSubmit() {
+		// for (var c of this.cat) {
+		// 	c = Number(c);
+		// }
+		// this.cat = this.cat.map(Number);
       // let auctionService : AuctionService;      
 		  // this.model.description = this.model.ends;
 		  this.auction = {
 		    active: false,
 		    name: this.model.name,
-		    category: this.model.category,
+		    category: this.cat, //model.category,
 		    buy_price: this.model.buy_price,
 		    first_bid: this.model.first_bid,
 		    number_of_bids: this.model.number_of_bids,
 		    location: this.model.location,
 		    country: this.model.country,
-		    started: new Date(),//this.model.started,
+		    started:null,// new Date(),//this.model.started,
 		    ends: this.model.ends,
 		    description: this.model.description,
 		    winner: null
@@ -47,19 +52,34 @@ export class AuctionCreateComponent implements OnInit {
 
 		  const dat = new FormData;
 		  dat.append('name', this.auction.name);
-		  dat.append('winner', null);
 		  dat.append('location', this.auction.location);
-		  dat.append("category",this.auction.category);
-		  dat.append("buy_price",this.auction.buy_price);
+		  dat.append("category",this.auction.category[0]);
+		//   dat.append("buy_price",this.auction.buy_price);
 		  dat.append("first_bid",this.auction.first_bid);
 		  dat.append("country",this.auction.country);
 		  dat.append("ends",this.auction.ends);
 		  dat.append("description",this.auction.description);
+		  dat.append("ends",this.auction.ends);
+		//   dat.append('started',null);
 
-		  dat.append('photo', this.selectedFile);
-		  console.log(this.auction);
+		  if(this.selectedFile)
+			  dat.append('photo', this.selectedFile);
+		  if(this.auction.buy_price != null)
+			  dat.append("buy_price",this.auction.buy_price);
+		  else
+		  	this.auction.buy_price = null;
+		  console.log("BUY:"+this.auction.buy_price);
 
-		  this.auctionService.postAuction(dat).subscribe(data => console.log(data));
+		  this.auctionService.postAuction(dat).subscribe(data => {
+			  let id = +data.id
+			  let auction;
+			  this.auctionService.getAuction(id).subscribe(data=>{
+				  auction = data;
+				  auction.category = this.cat;
+				  auction.buy_price=null;
+				  this.auctionService.putAuction(auction).subscribe(data => console.log(data));
+			  })
+		  });
     }
 
   

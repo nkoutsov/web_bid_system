@@ -55,7 +55,7 @@ export class MessagesComponent implements OnInit {
   }
 
   deleteMessage(id) {
-    this.blservice.deleteMessage(id).subscribe(res => console.log(res));
+    this.blservice.deleteMessage(id).subscribe(res => this.getInboxSent());
   }
 
 

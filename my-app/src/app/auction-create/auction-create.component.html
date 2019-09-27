@@ -3,81 +3,73 @@
     <h1>
         Auction Creation Form
     </h1>
-    
+
     <form ngNativeValidate (ngSubmit)="onSubmit()">
 
         <div>
-            <label for="description">Name<br/></label>
-            <input type="text" class="form-control" id="name"
-            required
-            [(ngModel)]="model.name" name="name">
+            <label for="description">Name<br /></label>
+            <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" name="name">
         </div>
-        <br/>
+        <br />
 
         <div>
-            <label for="category">Category<br/></label>
-            <select multiple class="form-control" id="category" required
-                    [(ngModel)]="model.category.name" name="category">
-                <option *ngFor="let cat of model.category" value={{cat.id}}>
-                    {{cat.name}}
-                </option>
+            <label for="category">Category<br /></label>
+            <select multiple class="form-control" id="category" required [(ngModel)]="cat"
+                name="category">
+                <!-- <div *ngFor="let cat of model.category"> -->
+                    <option *ngFor="let cat of model.category" value="{{cat.name}}">
+                        {{cat.name}}
+                    </option>
+                <!-- </div> -->
             </select>
         </div>
-        <br/>
+        <br />
 
         <div>
-            <label for="buy_price">Buy Price<br/></label>
-            <input type="number" class="form-control" id="buy_price" min="0" value="null"
-            [(ngModel)]="model.buy_price" name="buy_price">
+            <label for="buy_price">Buy Price<br /></label>
+            <input type="number" class="form-control" id="buy_price" min="0" value="null" [(ngModel)]="model.buy_price"
+                name="buy_price">
         </div>
-        <br/>
+        <br />
 
         <div>
-            <label for="first_bid">First Bid<br/></label>
-            <input type="number" class="form-control" id="first_bid" min="0"
-            required
-            [(ngModel)]="model.first_bid" name="first_bid">
+            <label for="first_bid">First Bid<br /></label>
+            <input type="number" class="form-control" id="first_bid" min="0" required [(ngModel)]="model.first_bid"
+                name="first_bid">
         </div>
-        <br/>
+        <br />
 
         <div>
-            <label for="location">Location<br/></label>
-            <input type="text" class="form-control" id="location"
-            required
-            [(ngModel)]="model.location" name="location">
+            <label for="location">Location<br /></label>
+            <input type="text" class="form-control" id="location" required [(ngModel)]="model.location" name="location">
         </div>
-        <br/>
+        <br />
 
         <div>
-            <label for="country">Country<br/></label>
-            <input type="text" class="form-control" id="country"
-            required
-            [(ngModel)]="model.country" name="country">
+            <label for="country">Country<br /></label>
+            <input type="text" class="form-control" id="country" required [(ngModel)]="model.country" name="country">
         </div>
-        <br/>
+        <br />
 
-        <div>
-            <label for="started">Started<br/></label>
-            <input type="date" class="form-control" id="started"
-            [(ngModel)]="model.started" name="started">
-        </div> 
-        <br/>
-
-        <div>
-            <label for="ends">Ends<br/></label>
-            <input type="date" class="form-control" id="ends"
-            required
-            [(ngModel)]="model.ends" name="ends">
+        <!-- <div>
+            <label for="started">Started<br /></label>
+            <input type="date" class="form-control" id="started" [(ngModel)]="model.started" name="started">
         </div>
-        <br/> 
+        <br /> -->
 
         <div>
-            <label for="description">Description<br/></label>
-            <input type="text" class="form-control" id="description"
-            required
-            [(ngModel)]="model.description" name="description">
+            <label for="ends">Ends<br /></label>
+            <input type="datetime-local"  class="form-control" id="ends" required [(ngModel)]="model.ends" name="ends">
+            <!-- <input type="datetime" class="form-control" id="ends" required [(ngModel)]="model.ends" name="ends"> -->
         </div>
-        <br/>
+        <br />
+
+        <div>
+            <label for="description">Description<br /></label>
+            <input type="text" class="form-control" id="description" required [(ngModel)]="model.description"
+                name="description">
+        </div>
+        <br />
 
         <div>
             <button type="submit" class="btn btn-success">Create Auction</button>
