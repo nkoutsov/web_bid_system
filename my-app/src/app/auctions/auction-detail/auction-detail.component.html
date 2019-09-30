@@ -1,0 +1,56 @@
+<div *ngIf="auction ">
+    <h2>{{auction.name | uppercase}} Details</h2>
+    <!-- <div><span>id: </span>{{auction.id}}</div>
+    <div>
+      <label>
+            Country: {{auction.country}}
+      </label>
+      <label>
+            Description: {{auction.description}} 
+      </label>
+    </div> -->
+    
+
+    <div class="card">
+            <div class="card-body">
+                  <img src="{{auction.photo}}"/>
+                <h5 class="card-title">Name: {{auction.name}}</h5>
+                <p class="card-text">Currently: {{auction.currently}}$</p>
+                <p class="card-text">Category: {{auction.category}}</p>
+                <p class="card-text"> Ends: {{auction.ends  | date:'fullDate'}} </p>
+                <p class="card-text">Location: {{auction.location}}</p>
+                <p class="card-text">Country: {{auction.country}}</p>
+                <p class="card-text">Seller: {{auction.seller}}  </p>
+                <p class="card-text">Description: {{auction.description}} </p>
+                
+                <!-- <a  routerLink="/auction/{{auction.id}}" class="btn btn-primary">Details</a> -->
+                <button  class="btn btn-primary" (click)='goBack()'>Back</button>
+            </div>
+      </div>
+<div *ngIf='active && auction.active'>
+      <h3 *ngIf="fail" style="color: red"> Bid has to be greater than currently</h3>
+      <input [(ngModel)]="amount" placeholder="amount"/>
+      <br>
+      <button  class="btn btn-primary btn-sm" (click)='place()'>Place bid</button>
+</div>
+<div *ngIf='!auction.active && username==auction.seller '>
+      <button class="btn btn-primary btn-sm" (click)='start()'>Start Auction</button>
+</div>
+<div *ngIf='username==auction.seller'>
+      <h3> Bids:</h3>
+      <div *ngFor='let b of bids' class="card">
+            <p>Bidder: {{b.bidder}} </p>
+            {{b.amount}}$ -  {{ b.time | date:'medium'}}
+      </div>
+</div>
+
+<div *ngIf='won=="true"'>
+      <form>
+      <input type="text" [(ngModel)]='message' name="message">
+      <button (click)="send(message)" class="btn btn-primary">Send Message</button>
+      </form>
+</div>
+
+  </div>
+  
+  <app-map-detail></app-map-detail>

@@ -11,16 +11,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-# from bids.models import User
-# from django.contrib.auth import get_user_model
-# User = get_user_model()
+import datetime
 
 AUTH_USER_MODEL = 'bids.User'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_SSL_REDIRECT = True
 
 
@@ -49,29 +46,22 @@ INSTALLED_APPS = [
     'bids.apps.BidsConfig',
     'corsheaders',
     'django_filters',
-    # 'rest_framework.authtoken',
     # 'mod_wsgi.server',
 ]
 
 MIDDLEWARE = [
     
     'django.middleware.security.SecurityMiddleware',
-    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'django.contrib.auth.middleware.RemoteUserMiddleware',
     'bids.backend.AuthenticationMiddlewareJWT',
-    # 'bids.backend.JWTAuthentication',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
 ]
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.RemoteUserBackend',
-# ]
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:4200",
@@ -79,7 +69,6 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 CSRF_COOKIE_NAME = 'XSRF-TOKEN'
-# CSRF_COOKIE_SECURE = False
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -101,19 +90,16 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 1000,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'bids.backend.JWTAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     )
 }
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-import datetime
+
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
     'rest_framework_jwt.utils.jwt_encode_handler',
@@ -157,7 +143,7 @@ JWT_AUTH = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'auctiondb',                      # Or path to database file if using sqlite3.
+        'NAME': 'rec',                      # Or path to database file if using sqlite3.
         'USER': 'postgres',                      # Not used with sqlite3.
         'PASSWORD': 'app',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -202,8 +188,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static2/'
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/bids'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
+MEDIA_URL =  '/media2/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media2")
 

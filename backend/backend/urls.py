@@ -18,14 +18,9 @@ from django.urls import include, path
 from rest_framework import routers
 from bids import views
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
 from django.contrib.auth import views as auth_views
-
-# from rest_framework_simplejwt import views as jwt_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 router = routers.DefaultRouter()
@@ -38,15 +33,12 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    # path('login/', views.my_view),
     path('',include('bids.urls')),
     path('api/token/',  obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     path('accounts/login/', auth_views.LoginView.as_view()),
-    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/token/refresh/', jviews.TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-
 ]
+
+
+if settings.DEBUG:
+  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

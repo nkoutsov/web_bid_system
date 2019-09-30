@@ -1,0 +1,13 @@
+<div *ngFor='let a of pageOfItems'>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{a.name}}</h5>
+            <p class="card-text">{{a.description}} - {{a.currently}}$</p>
+            <a  routerLink="/auction/{{a.id}}" class="btn btn-primary">Details</a>
+        </div>
+    </div>
+</div>
+
+<div class="card-footer pb-0 pt-3">
+    <jw-pagination [pageSize]='5' [items]="auctions" (changePage)="onChangePage($event)"></jw-pagination>
+</div>

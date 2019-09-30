@@ -1,9 +1,0 @@
-<div *ngFor='let a of auctions'>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{a.name}}</h5>
-                <p class="card-text">{{a.description}} - {{a.currently}}$</p>
-                <a  routerLink="/auction/{{a.id}}" class="btn btn-primary">Details</a>
-            </div>
-        </div>
-    </div>

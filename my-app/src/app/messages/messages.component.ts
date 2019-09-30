@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MessagingService } from '../messaging.service';
+import { MessagingService } from '../services/messaging.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Message } from '../models/message';
 import { switchMap } from 'rxjs/operators';
@@ -10,9 +10,10 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-  private inbox : Message[];
-  private sent : Message[];
+  private inbox : any[] // Message[];
+  private sent : any[] // Message[];
   private flag : string;
+  private receiver : string;
 
 
   constructor(
@@ -27,8 +28,34 @@ export class MessagesComponent implements OnInit {
   }
 
   getInboxSent() {
-    this.blservice.getInboxMessages().subscribe(inb => this.inbox=inb.results);
+    this.blservice.getInboxMessages().subscribe(inb => {
+      this.inbox=inb.results;
+      for (var i of this.inbox) {
+        if (i.read == false ) {
+          i.read = true;
+          // update msg
+          this.blservice.updateMsg(i).subscribe(data => console.log(data));
+        }
+      }
+    });
     this.blservice.getSentMessages().subscribe(snt => this.sent = snt.results);
+  }
+
+  send(message) {
+    let msg = {
+      text: message,
+      receiver: this.receiver
+    }
+    this.blservice.sendMessage(msg).subscribe(data => console.log(data));
+    this.receiver = null;
+  }
+
+  reply(rec) {
+    this.receiver = rec; 
+  }
+
+  deleteMessage(id) {
+    this.blservice.deleteMessage(id).subscribe(res => this.getInboxSent());
   }
 
 

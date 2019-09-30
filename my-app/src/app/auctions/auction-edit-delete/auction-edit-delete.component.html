@@ -1,0 +1,93 @@
+<div align="center">
+    <h1>
+        Auction Edit-Delete Form
+    </h1>
+    
+    <form ngNativeValidate (ngSubmit)="updateAuction()">
+
+        <div>
+            <label for="description">Name<br/></label>
+            <input type="text" class="form-control" id="name"
+            required
+            [(ngModel)]="model.name" name="name">
+        </div>
+        <br/>
+
+        <div>
+            <label for="category">Category<br/></label>
+            <select multiple class="form-control" id="category" required
+                    [(ngModel)]="model.category.name" name="category">
+                <option *ngFor="let cat of model.category" value={{cat.name}}>
+                    {{cat.name}}
+                </option>
+            </select>
+        </div>
+        <br/>
+
+        <div>
+            <label for="buy_price">Buy Price<br/></label>
+            <input type="number" class="form-control" id="buy_price" min="0" value="null"
+            [(ngModel)]="model.buy_price" name="buy_price">
+        </div>
+        <br/>
+
+        <div>
+            <label for="first_bid">First Bid<br/></label>
+            <input type="number" class="form-control" id="first_bid" min="0"
+            required
+            [(ngModel)]="model.first_bid" name="first_bid">
+        </div>
+        <br/>
+
+        <div>
+            <label for="location">Location<br/></label>
+            <input type="text" class="form-control" id="location"
+            required
+            [(ngModel)]="model.location" name="location">
+        </div>
+        <br/>
+
+        <div>
+            <label for="country">Country<br/></label>
+            <input type="text" class="form-control" id="country"
+            required
+            [(ngModel)]="model.country" name="country">
+        </div>
+        <br/>
+
+        <!-- <div>
+            <label for="started">Started<br/></label>
+            <input type="datetime-local" class="form-control" id="started"
+            
+            [(ngModel)]="model.started" name="started">
+        </div> 
+        <br/> -->
+
+        <div>
+            <label for="ends">Ends<br/></label>
+            <input type="datetime-local" class="form-control" id="ends"
+            required
+            [(ngModel)]="model.ends" name="ends">
+        </div>
+        <br/> 
+
+        <div>
+            <label for="description">Description<br/></label>
+            <input type="text" class="form-control" id="description"
+            required
+            [(ngModel)]="model.description" name="description">
+        </div>
+        <br/>
+
+        <div>
+            <button type="submit" class="btn btn-success">Edit Auction</button>
+            <button type="delete" class="btn btn-delete" (click)="deleteAuction()">Delete Auction</button>
+        </div>
+
+        <!-- <app-osm-view 
+            [showDebugInfo]="true"
+            [showControlsZoom]="true"
+            [showControlsCurrentLocation]="true">
+        </app-osm-view> -->
+    </form>
+</div>
