@@ -142,12 +142,12 @@ JWT_AUTH = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'rec',                      # Or path to database file if using sqlite3.
-        'USER': 'postgres',                      # Not used with sqlite3.
-        'PASSWORD': 'app',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',  
+        'ENGINE': 'django.db.backends.sqlite3', #postgresql_psycopg2',
+        'NAME': BASE_DIR + '/db.sqlite3',                      # Or path to database file if using sqlite3.
+#        'USER': 'postgres',                      # Not used with sqlite3.
+#        'PASSWORD': 'app',                  # Not used with sqlite3.
+#        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '5432',  
     }
 }
 
